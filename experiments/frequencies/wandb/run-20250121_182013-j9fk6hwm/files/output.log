@@ -1,0 +1,86 @@
+Epoch 1/300 | Train Loss: 1.0986, Train Acc: 0.3290, Val Loss: 1.0986, Val Acc: 0.3378
+Epoch 2/300 | Train Loss: 1.0986, Train Acc: 0.3290, Val Loss: 1.0986, Val Acc: 0.3378
+Epoch 3/300 | Train Loss: 1.0986, Train Acc: 0.3290, Val Loss: 1.0986, Val Acc: 0.3378
+Epoch 4/300 | Train Loss: 1.0986, Train Acc: 0.3319, Val Loss: 1.0982, Val Acc: 0.4356
+Epoch 5/300 | Train Loss: 1.0952, Train Acc: 0.5657, Val Loss: 1.0878, Val Acc: 0.6511
+Epoch 6/300 | Train Loss: 1.0749, Train Acc: 0.6667, Val Loss: 1.0528, Val Acc: 0.6511
+Epoch 7/300 | Train Loss: 1.0214, Train Acc: 0.6667, Val Loss: 0.9973, Val Acc: 0.6200
+Epoch 8/300 | Train Loss: 0.9546, Train Acc: 0.5848, Val Loss: 0.9250, Val Acc: 0.5222
+Epoch 9/300 | Train Loss: 0.8899, Train Acc: 0.5419, Val Loss: 0.8828, Val Acc: 0.5000
+Epoch 10/300 | Train Loss: 0.8273, Train Acc: 0.5219, Val Loss: 0.8432, Val Acc: 0.4822
+Epoch 11/300 | Train Loss: 0.8106, Train Acc: 0.4967, Val Loss: 0.8182, Val Acc: 0.4222
+Epoch 12/300 | Train Loss: 0.7919, Train Acc: 0.4671, Val Loss: 0.7994, Val Acc: 0.4422
+Epoch 13/300 | Train Loss: 0.7745, Train Acc: 0.4443, Val Loss: 0.7834, Val Acc: 0.4600
+Epoch 14/300 | Train Loss: 0.7270, Train Acc: 0.5224, Val Loss: 0.7200, Val Acc: 0.6200
+Epoch 15/300 | Train Loss: 0.6323, Train Acc: 0.7205, Val Loss: 0.5699, Val Acc: 0.8867
+Epoch 16/300 | Train Loss: 0.4930, Train Acc: 0.7995, Val Loss: 0.4454, Val Acc: 0.7644
+Epoch 17/300 | Train Loss: 0.3725, Train Acc: 0.8176, Val Loss: 0.3464, Val Acc: 0.8978
+Epoch 18/300 | Train Loss: 0.2949, Train Acc: 0.9076, Val Loss: 0.2525, Val Acc: 0.9067
+Epoch 19/300 | Train Loss: 0.1927, Train Acc: 0.9571, Val Loss: 0.1641, Val Acc: 0.9956
+Epoch 20/300 | Train Loss: 0.1189, Train Acc: 0.9962, Val Loss: 0.0851, Val Acc: 1.0000
+Epoch 21/300 | Train Loss: 0.0494, Train Acc: 1.0000, Val Loss: 0.0276, Val Acc: 1.0000
+Epoch 22/300 | Train Loss: 0.0161, Train Acc: 1.0000, Val Loss: 0.0274, Val Acc: 0.9911
+Epoch 23/300 | Train Loss: 0.0165, Train Acc: 0.9952, Val Loss: 0.0089, Val Acc: 1.0000
+Epoch 24/300 | Train Loss: 0.0091, Train Acc: 0.9990, Val Loss: 0.0065, Val Acc: 1.0000
+Epoch 25/300 | Train Loss: 0.0052, Train Acc: 0.9995, Val Loss: 0.0110, Val Acc: 0.9956
+Epoch 26/300 | Train Loss: 0.0070, Train Acc: 0.9986, Val Loss: 0.0032, Val Acc: 1.0000
+Epoch 27/300 | Train Loss: 0.0030, Train Acc: 1.0000, Val Loss: 0.0028, Val Acc: 1.0000
+Epoch 28/300 | Train Loss: 0.0018, Train Acc: 1.0000, Val Loss: 0.0019, Val Acc: 1.0000
+Epoch 29/300 | Train Loss: 0.0011, Train Acc: 1.0000, Val Loss: 0.0009, Val Acc: 1.0000
+Epoch 30/300 | Train Loss: 0.0008, Train Acc: 1.0000, Val Loss: 0.0007, Val Acc: 1.0000
+Epoch 31/300 | Train Loss: 0.0006, Train Acc: 1.0000, Val Loss: 0.0008, Val Acc: 1.0000
+Epoch 32/300 | Train Loss: 0.0005, Train Acc: 1.0000, Val Loss: 0.0006, Val Acc: 1.0000
+Epoch 33/300 | Train Loss: 0.0004, Train Acc: 1.0000, Val Loss: 0.0004, Val Acc: 1.0000
+Epoch 34/300 | Train Loss: 0.0003, Train Acc: 1.0000, Val Loss: 0.0004, Val Acc: 1.0000
+Epoch 35/300 | Train Loss: 0.0003, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 36/300 | Train Loss: 0.0003, Train Acc: 1.0000, Val Loss: 0.0002, Val Acc: 1.0000
+Epoch 37/300 | Train Loss: 0.0002, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 38/300 | Train Loss: 0.0004, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 39/300 | Train Loss: 0.0003, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 40/300 | Train Loss: 0.0002, Train Acc: 1.0000, Val Loss: 0.0006, Val Acc: 1.0000
+Epoch 41/300 | Train Loss: 0.0002, Train Acc: 1.0000, Val Loss: 0.0005, Val Acc: 1.0000
+Epoch 42/300 | Train Loss: 0.0002, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 43/300 | Train Loss: 0.0002, Train Acc: 1.0000, Val Loss: 0.0004, Val Acc: 1.0000
+Epoch 44/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0002, Val Acc: 1.0000
+Epoch 45/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 46/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 47/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 48/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0003, Val Acc: 1.0000
+Epoch 49/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 50/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 51/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 52/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 53/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 54/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 55/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 56/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 57/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 58/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 59/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 60/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 61/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 62/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 63/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 64/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Exception ignored in: <function _releaseLock at 0x7f83ee09b250>
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/logging/__init__.py", line 228, in _releaseLock
+    def _releaseLock():
+KeyboardInterrupt:
+Epoch 65/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 66/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0001, Val Acc: 1.0000
+Epoch 67/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 68/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 69/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 70/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 71/300 | Train Loss: 0.0001, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 72/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Epoch 73/300 | Train Loss: 0.0000, Train Acc: 1.0000, Val Loss: 0.0000, Val Acc: 1.0000
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies.py", line 190, in <module>
+    loss.backward()
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

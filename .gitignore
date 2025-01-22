@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 .idea
 .vs
+*.sbatch
 
 __pycache__
 

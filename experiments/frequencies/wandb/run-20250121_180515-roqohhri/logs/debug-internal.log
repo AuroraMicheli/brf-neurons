@@ -1,0 +1,15 @@
+{"time":"2025-01-21T18:05:15.776355566+01:00","level":"INFO","msg":"stream: starting","core version":"0.19.4","symlink path":"/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/wandb/run-20250121_180515-roqohhri/logs/debug-core.log"}
+{"time":"2025-01-21T18:05:15.905091305+01:00","level":"INFO","msg":"created new stream","id":"roqohhri"}
+{"time":"2025-01-21T18:05:15.905128807+01:00","level":"INFO","msg":"stream: started","id":"roqohhri"}
+{"time":"2025-01-21T18:05:15.905153406+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:15.905179438+01:00","level":"INFO","msg":"sender: started","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:15.905199436+01:00","level":"INFO","msg":"handler: started","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:16.166588922+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-01-21T18:05:31.917055373+01:00","level":"INFO","msg":"stream: closing","id":"roqohhri"}
+{"time":"2025-01-21T18:05:31.91710193+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-01-21T18:05:31.91817061+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-01-21T18:05:32.48792845+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-01-21T18:05:32.658965678+01:00","level":"INFO","msg":"handler: closed","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:32.658981346+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:32.658991236+01:00","level":"INFO","msg":"sender: closed","stream_id":"roqohhri"}
+{"time":"2025-01-21T18:05:32.660137779+01:00","level":"INFO","msg":"stream: closed","id":"roqohhri"}

@@ -1,0 +1,16 @@
+{"time":"2025-01-21T18:22:57.450569508+01:00","level":"INFO","msg":"stream: starting","core version":"0.19.4","symlink path":"/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/wandb/run-20250121_182257-q9ne69eg/logs/debug-core.log"}
+{"time":"2025-01-21T18:22:57.561257872+01:00","level":"INFO","msg":"created new stream","id":"q9ne69eg"}
+{"time":"2025-01-21T18:22:57.561303197+01:00","level":"INFO","msg":"stream: started","id":"q9ne69eg"}
+{"time":"2025-01-21T18:22:57.561334091+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:22:57.561349585+01:00","level":"INFO","msg":"handler: started","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:22:57.561342961+01:00","level":"INFO","msg":"sender: started","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:22:57.769620188+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-01-21T18:31:48.616532371+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-01-21T18:31:48.617541474+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-01-21T18:31:49.309614011+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-01-21T18:31:49.477853967+01:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2025-01-21T18:31:50.485796495+01:00","level":"INFO","msg":"stream: closing","id":"q9ne69eg"}
+{"time":"2025-01-21T18:31:50.485823009+01:00","level":"INFO","msg":"handler: closed","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:31:50.485837884+01:00","level":"INFO","msg":"sender: closed","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:31:50.485833182+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"q9ne69eg"}
+{"time":"2025-01-21T18:31:50.487358901+01:00","level":"INFO","msg":"stream: closed","id":"q9ne69eg"}

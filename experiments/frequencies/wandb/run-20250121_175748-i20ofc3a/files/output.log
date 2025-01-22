@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies.py", line 210, in <module>
+    learned_omegas = model.hidden.omega.detach().cpu().numpy()
+RuntimeError: Numpy is not available

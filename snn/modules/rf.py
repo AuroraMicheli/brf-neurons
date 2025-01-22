@@ -289,7 +289,7 @@ class BRFCell(RFCell):
         # divergence boundary
         b = p_omega - b_offset - q
 
-        z, u, v, q = brf_I_update(
+        z, u, v, q = brf_II_update( #II for better stability 
             x=in_sum,
             z_=z,
             u_=u,

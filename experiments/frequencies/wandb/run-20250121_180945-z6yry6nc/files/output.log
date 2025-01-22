@@ -1,0 +1,11 @@
+Epoch 1/300 | Train Loss: 1.0986, Train Acc: 0.3276, Val Loss: 1.0986, Val Acc: 0.3400
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies.py", line 219, in <module>
+    torch.save(model.state_dict(), save_path)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/serialization.py", line 440, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/serialization.py", line 315, in _open_zipfile_writer
+    return container(name_or_buffer)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/serialization.py", line 288, in __init__
+    super().__init__(torch._C.PyTorchFileWriter(str(name)))
+RuntimeError: Parent directory models does not exist.

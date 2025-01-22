@@ -1,0 +1,15 @@
+{"time":"2025-01-21T18:15:49.087199719+01:00","level":"INFO","msg":"stream: starting","core version":"0.19.4","symlink path":"/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/wandb/run-20250121_181548-k2tqoiyl/logs/debug-core.log"}
+{"time":"2025-01-21T18:15:49.202170946+01:00","level":"INFO","msg":"created new stream","id":"k2tqoiyl"}
+{"time":"2025-01-21T18:15:49.202213475+01:00","level":"INFO","msg":"stream: started","id":"k2tqoiyl"}
+{"time":"2025-01-21T18:15:49.202236417+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:15:49.202264614+01:00","level":"INFO","msg":"sender: started","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:15:49.202290498+01:00","level":"INFO","msg":"handler: started","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:15:49.437031838+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-01-21T18:18:41.403760191+01:00","level":"INFO","msg":"stream: closing","id":"k2tqoiyl"}
+{"time":"2025-01-21T18:18:41.403784518+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-01-21T18:18:41.404925134+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-01-21T18:18:41.98080024+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-01-21T18:18:42.229722599+01:00","level":"INFO","msg":"handler: closed","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:18:42.229753702+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:18:42.229780922+01:00","level":"INFO","msg":"sender: closed","stream_id":"k2tqoiyl"}
+{"time":"2025-01-21T18:18:42.231495563+01:00","level":"INFO","msg":"stream: closed","id":"k2tqoiyl"}
