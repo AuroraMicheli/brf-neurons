@@ -1,0 +1,15 @@
+{"time":"2025-01-22T11:16:10.679570441+01:00","level":"INFO","msg":"stream: starting","core version":"0.19.4","symlink path":"/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/wandb/run-20250122_111610-dsyv86bt/logs/debug-core.log"}
+{"time":"2025-01-22T11:16:10.796762572+01:00","level":"INFO","msg":"created new stream","id":"dsyv86bt"}
+{"time":"2025-01-22T11:16:10.796802325+01:00","level":"INFO","msg":"stream: started","id":"dsyv86bt"}
+{"time":"2025-01-22T11:16:10.796842385+01:00","level":"INFO","msg":"handler: started","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:16:10.800055332+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:16:10.800056891+01:00","level":"INFO","msg":"sender: started","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:16:11.054062714+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-01-22T11:21:17.838541955+01:00","level":"INFO","msg":"stream: closing","id":"dsyv86bt"}
+{"time":"2025-01-22T11:21:17.838576386+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-01-22T11:21:17.839435383+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-01-22T11:21:18.709723951+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-01-22T11:21:18.866198274+01:00","level":"INFO","msg":"handler: closed","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:21:18.866228639+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:21:18.866252309+01:00","level":"INFO","msg":"sender: closed","stream_id":"dsyv86bt"}
+{"time":"2025-01-22T11:21:18.86764525+01:00","level":"INFO","msg":"stream: closed","id":"dsyv86bt"}

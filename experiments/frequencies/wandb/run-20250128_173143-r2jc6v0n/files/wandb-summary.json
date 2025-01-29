@@ -1,0 +1,1 @@
+{"_runtime":269.556379648,"Train Accuracy":1,"_step":603,"_wandb":{"runtime":270},"Epoch":151,"Train Loss":0.381109356880188,"Neuron 0 Omega":-3.321416011038022e-24,"Neuron 1 Omega":23.53160285949707,"Validation Loss":0.3445594906806946,"_timestamp":1.738082173421616e+09,"Validation Accuracy":1,"Neuron 2 Omega":33.532569885253906}

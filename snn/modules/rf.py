@@ -189,6 +189,7 @@ class RFCell(torch.nn.Module):
             dt: float = DEFAULT_DT,
             bias: bool = False,
             pruning: bool = False,
+            initial_omegas: list = None #Aurora NEW argument for custom omega initialization
     ) -> None:
         super(RFCell, self).__init__()
 
@@ -221,11 +222,18 @@ class RFCell(torch.nn.Module):
         self.adaptive_omega_a = adaptive_omega_a
         self.adaptive_omega_b = adaptive_omega_b
 
-        omega = omega * torch.ones(layer_size)
+        #omega = omega * torch.ones(layer_size)
+                # Omega initialization
+        if initial_omegas is not None:
+            assert len(initial_omegas) == layer_size, "Length of initial_omegas must match layer_size"
+            omega = torch.tensor(initial_omegas, dtype=torch.float32)
+        else:
+            omega = omega * torch.ones(layer_size)
+
 
         if adaptive_omega:
             self.omega = torch.nn.Parameter(omega)
-            torch.nn.init.uniform_(self.omega, adaptive_omega_a, adaptive_omega_b)
+            #torch.nn.init.uniform_(self.omega, adaptive_omega_a, adaptive_omega_b)
         else:
             self.register_buffer('omega', omega)
 

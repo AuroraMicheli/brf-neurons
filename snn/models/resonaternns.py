@@ -22,6 +22,7 @@ class SimpleResRNN(torch.nn.Module):
             output_bias: bool = False,
             label_last: bool = False,
             dt: float = 0.01,
+            initial_omegas: list = None  # Aurora New argument
     ) -> None:
         super(SimpleResRNN, self).__init__()
 
@@ -57,7 +58,8 @@ class SimpleResRNN(torch.nn.Module):
             adaptive_b_offset_a=adaptive_b_offset_a,
             adaptive_b_offset_b=adaptive_b_offset_b,
             dt=dt,
-            pruning=pruning
+            pruning=pruning,
+            initial_omegas=initial_omegas  # Pass custom omega values
         )
 
         self.out = modules.LICell(

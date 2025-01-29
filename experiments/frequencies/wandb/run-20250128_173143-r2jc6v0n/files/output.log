@@ -1,0 +1,186 @@
+Epoch 1/300 | Train Loss: 1.0986, Train Acc: 0.3395, Val Loss: 1.0986, Val Acc: 0.3133
+Epoch 2/300 | Train Loss: 1.0986, Train Acc: 0.3395, Val Loss: 1.0986, Val Acc: 0.3133
+Epoch 3/300 | Train Loss: 1.0986, Train Acc: 0.3395, Val Loss: 1.0986, Val Acc: 0.3133
+Epoch 4/300 | Train Loss: 1.0986, Train Acc: 0.3395, Val Loss: 1.0986, Val Acc: 0.3133
+Epoch 5/300 | Train Loss: 1.0986, Train Acc: 0.3395, Val Loss: 1.0982, Val Acc: 0.4911
+Epoch 6/300 | Train Loss: 1.0955, Train Acc: 0.6371, Val Loss: 1.0896, Val Acc: 0.6667
+Epoch 7/300 | Train Loss: 1.0842, Train Acc: 0.6667, Val Loss: 1.0734, Val Acc: 0.6667
+Epoch 8/300 | Train Loss: 1.0673, Train Acc: 0.6667, Val Loss: 1.0568, Val Acc: 0.6667
+Epoch 9/300 | Train Loss: 1.0476, Train Acc: 0.7876, Val Loss: 1.0065, Val Acc: 1.0000
+Epoch 10/300 | Train Loss: 0.9877, Train Acc: 1.0000, Val Loss: 0.9468, Val Acc: 0.9667
+Epoch 11/300 | Train Loss: 0.9295, Train Acc: 0.9514, Val Loss: 0.8806, Val Acc: 1.0000
+Epoch 12/300 | Train Loss: 0.8658, Train Acc: 1.0000, Val Loss: 0.8175, Val Acc: 1.0000
+Epoch 13/300 | Train Loss: 0.8057, Train Acc: 0.9752, Val Loss: 0.7677, Val Acc: 0.9333
+Epoch 14/300 | Train Loss: 0.7532, Train Acc: 0.9219, Val Loss: 0.7033, Val Acc: 0.9244
+Epoch 15/300 | Train Loss: 0.7102, Train Acc: 0.9271, Val Loss: 0.6534, Val Acc: 0.9422
+Epoch 16/300 | Train Loss: 0.6387, Train Acc: 0.9452, Val Loss: 0.5786, Val Acc: 0.9467
+Epoch 17/300 | Train Loss: 0.5795, Train Acc: 0.9414, Val Loss: 0.5285, Val Acc: 0.9444
+Epoch 18/300 | Train Loss: 0.5435, Train Acc: 0.9495, Val Loss: 0.4969, Val Acc: 0.9511
+Epoch 19/300 | Train Loss: 0.4904, Train Acc: 0.9571, Val Loss: 0.4614, Val Acc: 0.9578
+Epoch 20/300 | Train Loss: 0.4721, Train Acc: 0.9643, Val Loss: 0.4436, Val Acc: 0.9689
+Epoch 21/300 | Train Loss: 0.4571, Train Acc: 0.9890, Val Loss: 0.4254, Val Acc: 1.0000
+Epoch 22/300 | Train Loss: 0.4382, Train Acc: 1.0000, Val Loss: 0.4088, Val Acc: 1.0000
+Epoch 23/300 | Train Loss: 0.4381, Train Acc: 1.0000, Val Loss: 0.4109, Val Acc: 1.0000
+Epoch 24/300 | Train Loss: 0.4325, Train Acc: 1.0000, Val Loss: 0.3927, Val Acc: 1.0000
+Epoch 25/300 | Train Loss: 0.4202, Train Acc: 1.0000, Val Loss: 0.3828, Val Acc: 1.0000
+Epoch 26/300 | Train Loss: 0.4126, Train Acc: 1.0000, Val Loss: 0.3913, Val Acc: 1.0000
+Epoch 27/300 | Train Loss: 0.4200, Train Acc: 1.0000, Val Loss: 0.3822, Val Acc: 1.0000
+Epoch 28/300 | Train Loss: 0.4168, Train Acc: 1.0000, Val Loss: 0.3814, Val Acc: 1.0000
+Epoch 29/300 | Train Loss: 0.4194, Train Acc: 1.0000, Val Loss: 0.3856, Val Acc: 1.0000
+Epoch 30/300 | Train Loss: 0.4121, Train Acc: 1.0000, Val Loss: 0.3788, Val Acc: 1.0000
+Epoch 31/300 | Train Loss: 0.3972, Train Acc: 1.0000, Val Loss: 0.3737, Val Acc: 1.0000
+Epoch 32/300 | Train Loss: 0.4043, Train Acc: 1.0000, Val Loss: 0.3761, Val Acc: 1.0000
+Epoch 33/300 | Train Loss: 0.4020, Train Acc: 1.0000, Val Loss: 0.3685, Val Acc: 1.0000
+Epoch 34/300 | Train Loss: 0.3939, Train Acc: 1.0000, Val Loss: 0.3733, Val Acc: 1.0000
+Epoch 35/300 | Train Loss: 0.4028, Train Acc: 1.0000, Val Loss: 0.3631, Val Acc: 1.0000
+Epoch 36/300 | Train Loss: 0.3966, Train Acc: 1.0000, Val Loss: 0.3738, Val Acc: 1.0000
+Epoch 37/300 | Train Loss: 0.3919, Train Acc: 1.0000, Val Loss: 0.3682, Val Acc: 1.0000
+Epoch 38/300 | Train Loss: 0.3995, Train Acc: 1.0000, Val Loss: 0.3662, Val Acc: 1.0000
+Epoch 39/300 | Train Loss: 0.4025, Train Acc: 1.0000, Val Loss: 0.3675, Val Acc: 1.0000
+Epoch 40/300 | Train Loss: 0.3951, Train Acc: 1.0000, Val Loss: 0.3660, Val Acc: 1.0000
+Epoch 41/300 | Train Loss: 0.3954, Train Acc: 1.0000, Val Loss: 0.3632, Val Acc: 1.0000
+Epoch 42/300 | Train Loss: 0.4017, Train Acc: 1.0000, Val Loss: 0.3642, Val Acc: 1.0000
+Epoch 43/300 | Train Loss: 0.3868, Train Acc: 1.0000, Val Loss: 0.3618, Val Acc: 1.0000
+Epoch 44/300 | Train Loss: 0.3988, Train Acc: 1.0000, Val Loss: 0.3620, Val Acc: 1.0000
+Epoch 45/300 | Train Loss: 0.3951, Train Acc: 1.0000, Val Loss: 0.3613, Val Acc: 1.0000
+Epoch 46/300 | Train Loss: 0.3964, Train Acc: 1.0000, Val Loss: 0.3623, Val Acc: 1.0000
+Epoch 47/300 | Train Loss: 0.3925, Train Acc: 1.0000, Val Loss: 0.3617, Val Acc: 1.0000
+Epoch 48/300 | Train Loss: 0.3908, Train Acc: 1.0000, Val Loss: 0.3592, Val Acc: 1.0000
+Epoch 49/300 | Train Loss: 0.3924, Train Acc: 1.0000, Val Loss: 0.3625, Val Acc: 1.0000
+Epoch 50/300 | Train Loss: 0.3987, Train Acc: 1.0000, Val Loss: 0.3602, Val Acc: 1.0000
+Epoch 51/300 | Train Loss: 0.3933, Train Acc: 1.0000, Val Loss: 0.3589, Val Acc: 1.0000
+Epoch 52/300 | Train Loss: 0.4004, Train Acc: 1.0000, Val Loss: 0.3594, Val Acc: 1.0000
+Epoch 53/300 | Train Loss: 0.3850, Train Acc: 1.0000, Val Loss: 0.3591, Val Acc: 1.0000
+Epoch 54/300 | Train Loss: 0.3862, Train Acc: 1.0000, Val Loss: 0.3573, Val Acc: 1.0000
+Epoch 55/300 | Train Loss: 0.3928, Train Acc: 1.0000, Val Loss: 0.3578, Val Acc: 1.0000
+Epoch 56/300 | Train Loss: 0.3979, Train Acc: 1.0000, Val Loss: 0.3576, Val Acc: 1.0000
+Epoch 57/300 | Train Loss: 0.3895, Train Acc: 1.0000, Val Loss: 0.3547, Val Acc: 1.0000
+Epoch 58/300 | Train Loss: 0.3924, Train Acc: 1.0000, Val Loss: 0.3558, Val Acc: 1.0000
+Epoch 59/300 | Train Loss: 0.3961, Train Acc: 1.0000, Val Loss: 0.3539, Val Acc: 1.0000
+Epoch 60/300 | Train Loss: 0.3914, Train Acc: 1.0000, Val Loss: 0.3590, Val Acc: 1.0000
+Epoch 61/300 | Train Loss: 0.3821, Train Acc: 1.0000, Val Loss: 0.3548, Val Acc: 1.0000
+Epoch 62/300 | Train Loss: 0.3913, Train Acc: 1.0000, Val Loss: 0.3536, Val Acc: 1.0000
+Epoch 63/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3688, Val Acc: 0.9889
+Epoch 64/300 | Train Loss: 0.3996, Train Acc: 0.9990, Val Loss: 0.3535, Val Acc: 1.0000
+Epoch 65/300 | Train Loss: 0.3941, Train Acc: 1.0000, Val Loss: 0.3552, Val Acc: 1.0000
+Epoch 66/300 | Train Loss: 0.3852, Train Acc: 1.0000, Val Loss: 0.3532, Val Acc: 1.0000
+Epoch 67/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3557, Val Acc: 1.0000
+Epoch 68/300 | Train Loss: 0.4006, Train Acc: 1.0000, Val Loss: 0.3538, Val Acc: 1.0000
+Epoch 69/300 | Train Loss: 0.3886, Train Acc: 1.0000, Val Loss: 0.3554, Val Acc: 1.0000
+Epoch 70/300 | Train Loss: 0.3875, Train Acc: 1.0000, Val Loss: 0.3525, Val Acc: 1.0000
+Epoch 71/300 | Train Loss: 0.3841, Train Acc: 1.0000, Val Loss: 0.3518, Val Acc: 1.0000
+Epoch 72/300 | Train Loss: 0.3820, Train Acc: 1.0000, Val Loss: 0.3523, Val Acc: 1.0000
+Epoch 73/300 | Train Loss: 0.3888, Train Acc: 1.0000, Val Loss: 0.3501, Val Acc: 1.0000
+Epoch 74/300 | Train Loss: 0.3859, Train Acc: 1.0000, Val Loss: 0.3549, Val Acc: 1.0000
+Epoch 75/300 | Train Loss: 0.4028, Train Acc: 1.0000, Val Loss: 0.3516, Val Acc: 1.0000
+Epoch 76/300 | Train Loss: 0.3932, Train Acc: 1.0000, Val Loss: 0.3542, Val Acc: 1.0000
+Epoch 77/300 | Train Loss: 0.3903, Train Acc: 1.0000, Val Loss: 0.3506, Val Acc: 1.0000
+Epoch 78/300 | Train Loss: 0.3912, Train Acc: 1.0000, Val Loss: 0.3524, Val Acc: 1.0000
+Epoch 79/300 | Train Loss: 0.3858, Train Acc: 1.0000, Val Loss: 0.3527, Val Acc: 1.0000
+Epoch 80/300 | Train Loss: 0.3864, Train Acc: 1.0000, Val Loss: 0.3514, Val Acc: 1.0000
+Epoch 81/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3503, Val Acc: 1.0000
+Epoch 82/300 | Train Loss: 0.3835, Train Acc: 1.0000, Val Loss: 0.3502, Val Acc: 1.0000
+Epoch 83/300 | Train Loss: 0.3902, Train Acc: 1.0000, Val Loss: 0.3533, Val Acc: 1.0000
+Epoch 84/300 | Train Loss: 0.3897, Train Acc: 1.0000, Val Loss: 0.3498, Val Acc: 1.0000
+Epoch 85/300 | Train Loss: 0.3787, Train Acc: 1.0000, Val Loss: 0.3541, Val Acc: 1.0000
+Epoch 86/300 | Train Loss: 0.3803, Train Acc: 1.0000, Val Loss: 0.3487, Val Acc: 1.0000
+Epoch 87/300 | Train Loss: 0.3862, Train Acc: 1.0000, Val Loss: 0.3511, Val Acc: 1.0000
+Epoch 88/300 | Train Loss: 0.3837, Train Acc: 1.0000, Val Loss: 0.3606, Val Acc: 1.0000
+Epoch 89/300 | Train Loss: 0.3945, Train Acc: 1.0000, Val Loss: 0.3514, Val Acc: 1.0000
+Epoch 90/300 | Train Loss: 0.3826, Train Acc: 1.0000, Val Loss: 0.3925, Val Acc: 1.0000
+Epoch 91/300 | Train Loss: 0.3863, Train Acc: 1.0000, Val Loss: 0.3541, Val Acc: 1.0000
+Epoch 92/300 | Train Loss: 0.3761, Train Acc: 1.0000, Val Loss: 0.3473, Val Acc: 1.0000
+Epoch 93/300 | Train Loss: 0.3886, Train Acc: 1.0000, Val Loss: 0.3521, Val Acc: 1.0000
+Epoch 94/300 | Train Loss: 0.3944, Train Acc: 1.0000, Val Loss: 0.3502, Val Acc: 1.0000
+Epoch 95/300 | Train Loss: 0.3843, Train Acc: 1.0000, Val Loss: 0.3638, Val Acc: 1.0000
+Epoch 96/300 | Train Loss: 0.3863, Train Acc: 1.0000, Val Loss: 0.3497, Val Acc: 1.0000
+Epoch 97/300 | Train Loss: 0.3739, Train Acc: 1.0000, Val Loss: 0.3458, Val Acc: 1.0000
+Epoch 98/300 | Train Loss: 0.3916, Train Acc: 1.0000, Val Loss: 0.3464, Val Acc: 1.0000
+Epoch 99/300 | Train Loss: 0.4003, Train Acc: 1.0000, Val Loss: 0.3587, Val Acc: 1.0000
+Epoch 100/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3457, Val Acc: 1.0000
+Epoch 101/300 | Train Loss: 0.3847, Train Acc: 1.0000, Val Loss: 0.3460, Val Acc: 1.0000
+Epoch 102/300 | Train Loss: 0.3903, Train Acc: 1.0000, Val Loss: 0.3487, Val Acc: 1.0000
+Epoch 103/300 | Train Loss: 0.3905, Train Acc: 1.0000, Val Loss: 0.3510, Val Acc: 1.0000
+Epoch 104/300 | Train Loss: 0.3855, Train Acc: 1.0000, Val Loss: 0.3471, Val Acc: 1.0000
+Epoch 105/300 | Train Loss: 0.3797, Train Acc: 1.0000, Val Loss: 0.3491, Val Acc: 1.0000
+Epoch 106/300 | Train Loss: 0.3808, Train Acc: 1.0000, Val Loss: 0.3475, Val Acc: 1.0000
+Epoch 107/300 | Train Loss: 0.3828, Train Acc: 1.0000, Val Loss: 0.3812, Val Acc: 1.0000
+Epoch 108/300 | Train Loss: 0.3903, Train Acc: 1.0000, Val Loss: 0.3500, Val Acc: 1.0000
+Epoch 109/300 | Train Loss: 0.3737, Train Acc: 1.0000, Val Loss: 0.3599, Val Acc: 1.0000
+Epoch 110/300 | Train Loss: 0.3902, Train Acc: 1.0000, Val Loss: 0.3510, Val Acc: 1.0000
+Epoch 111/300 | Train Loss: 0.3785, Train Acc: 1.0000, Val Loss: 0.3459, Val Acc: 1.0000
+Epoch 112/300 | Train Loss: 0.3673, Train Acc: 1.0000, Val Loss: 0.3460, Val Acc: 1.0000
+Epoch 113/300 | Train Loss: 0.3986, Train Acc: 1.0000, Val Loss: 0.3500, Val Acc: 1.0000
+Epoch 114/300 | Train Loss: 0.3937, Train Acc: 1.0000, Val Loss: 0.3502, Val Acc: 1.0000
+Epoch 115/300 | Train Loss: 0.3797, Train Acc: 1.0000, Val Loss: 0.3461, Val Acc: 1.0000
+Epoch 116/300 | Train Loss: 0.3750, Train Acc: 1.0000, Val Loss: 0.3495, Val Acc: 1.0000
+Epoch 117/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3508, Val Acc: 1.0000
+Epoch 118/300 | Train Loss: 0.3866, Train Acc: 1.0000, Val Loss: 0.3469, Val Acc: 1.0000
+Epoch 119/300 | Train Loss: 0.3867, Train Acc: 1.0000, Val Loss: 0.3486, Val Acc: 1.0000
+Epoch 120/300 | Train Loss: 0.3862, Train Acc: 1.0000, Val Loss: 0.3617, Val Acc: 1.0000
+Epoch 121/300 | Train Loss: 0.3814, Train Acc: 1.0000, Val Loss: 0.3480, Val Acc: 1.0000
+Epoch 122/300 | Train Loss: 0.3744, Train Acc: 1.0000, Val Loss: 0.3490, Val Acc: 1.0000
+Epoch 123/300 | Train Loss: 0.3799, Train Acc: 1.0000, Val Loss: 0.3515, Val Acc: 1.0000
+Epoch 124/300 | Train Loss: 0.3841, Train Acc: 1.0000, Val Loss: 0.3514, Val Acc: 1.0000
+Epoch 125/300 | Train Loss: 0.3817, Train Acc: 1.0000, Val Loss: 0.3481, Val Acc: 1.0000
+Epoch 126/300 | Train Loss: 0.3904, Train Acc: 1.0000, Val Loss: 0.3584, Val Acc: 1.0000
+Epoch 127/300 | Train Loss: 0.3841, Train Acc: 1.0000, Val Loss: 0.3452, Val Acc: 1.0000
+Epoch 128/300 | Train Loss: 0.3922, Train Acc: 1.0000, Val Loss: 0.3472, Val Acc: 1.0000
+Epoch 129/300 | Train Loss: 0.3903, Train Acc: 1.0000, Val Loss: 0.3483, Val Acc: 1.0000
+Epoch 130/300 | Train Loss: 0.3749, Train Acc: 1.0000, Val Loss: 0.3418, Val Acc: 1.0000
+Epoch 131/300 | Train Loss: 0.3920, Train Acc: 1.0000, Val Loss: 0.3421, Val Acc: 1.0000
+Epoch 132/300 | Train Loss: 0.3745, Train Acc: 1.0000, Val Loss: 0.3483, Val Acc: 1.0000
+Epoch 133/300 | Train Loss: 0.3845, Train Acc: 1.0000, Val Loss: 0.3588, Val Acc: 1.0000
+Epoch 134/300 | Train Loss: 0.3825, Train Acc: 1.0000, Val Loss: 0.3492, Val Acc: 1.0000
+Epoch 135/300 | Train Loss: 0.3893, Train Acc: 1.0000, Val Loss: 0.3483, Val Acc: 1.0000
+Epoch 136/300 | Train Loss: 0.3783, Train Acc: 1.0000, Val Loss: 0.3475, Val Acc: 1.0000
+Epoch 137/300 | Train Loss: 0.3900, Train Acc: 1.0000, Val Loss: 0.3476, Val Acc: 1.0000
+Epoch 138/300 | Train Loss: 0.3806, Train Acc: 1.0000, Val Loss: 0.3464, Val Acc: 1.0000
+Epoch 139/300 | Train Loss: 0.3832, Train Acc: 1.0000, Val Loss: 0.3472, Val Acc: 1.0000
+Epoch 140/300 | Train Loss: 0.3824, Train Acc: 1.0000, Val Loss: 0.3480, Val Acc: 1.0000
+Epoch 141/300 | Train Loss: 0.3738, Train Acc: 1.0000, Val Loss: 0.3477, Val Acc: 1.0000
+Epoch 142/300 | Train Loss: 0.3830, Train Acc: 1.0000, Val Loss: 0.3458, Val Acc: 1.0000
+Epoch 143/300 | Train Loss: 0.3947, Train Acc: 1.0000, Val Loss: 0.3470, Val Acc: 1.0000
+Epoch 144/300 | Train Loss: 0.3772, Train Acc: 1.0000, Val Loss: 0.3497, Val Acc: 1.0000
+Epoch 145/300 | Train Loss: 0.3772, Train Acc: 1.0000, Val Loss: 0.3513, Val Acc: 1.0000
+Epoch 146/300 | Train Loss: 0.3843, Train Acc: 1.0000, Val Loss: 0.3478, Val Acc: 1.0000
+Epoch 147/300 | Train Loss: 0.3832, Train Acc: 1.0000, Val Loss: 0.3449, Val Acc: 1.0000
+Epoch 148/300 | Train Loss: 0.3766, Train Acc: 1.0000, Val Loss: 0.3449, Val Acc: 1.0000
+Epoch 149/300 | Train Loss: 0.3807, Train Acc: 1.0000, Val Loss: 0.3476, Val Acc: 1.0000
+Epoch 150/300 | Train Loss: 0.3850, Train Acc: 1.0000, Val Loss: 0.3485, Val Acc: 1.0000
+Epoch 151/300 | Train Loss: 0.3811, Train Acc: 1.0000, Val Loss: 0.3446, Val Acc: 1.0000
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies_classification.py", line 193, in <module>
+    outputs, _, _ = model(inputs.permute(1, 0, 2))
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+RuntimeError: The following operation failed in the TorchScript interpreter.
+Traceback of TorchScript (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/models/resonaternns.py", line 99, in forward
+            hidden = hidden_z, hidden_u, hidden_v, hidden_q
+
+            hidden_z, hidden_u, hidden_v, hidden_q = self.hidden(
+                                                     ~~~~~~~~~~~ <--- HERE
+                torch.cat((input_t, hidden_z), dim=1),  # input_t for non-recurrency
+                hidden
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/modules/rf.py", line 300, in forward
+        b = p_omega - b_offset - q
+
+        z, u, v, q = brf_II_update( #II for better stability
+                     ~~~~~~~~~~~~~ <--- HERE
+            x=in_sum,
+            z_=z,
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/modules/rf.py", line 109, in brf_II_update
+    q = 0.9 * q_ + z_
+
+    z = functional.StepDoubleGaussianGrad.apply(u - theta - q)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ <--- HERE
+
+    return z, u, v, q
+RuntimeError: KeyboardInterrupt: <EMPTY MESSAGE>
+
+At:
+  /tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/functional/autograd.py(56): forward
+  /tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/autograd/function.py(506): apply
+  /tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/nn/modules/module.py(1501): _call_impl
+  /tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies_classification.py(193): <module>

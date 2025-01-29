@@ -1,0 +1,61 @@
+Epoch 1/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 2/300 | Train Loss: 0.5001, Val Loss: 0.4997
+Epoch 3/300 | Train Loss: 0.5001, Val Loss: 0.4995
+Epoch 4/300 | Train Loss: 0.5002, Val Loss: 0.4996
+Epoch 5/300 | Train Loss: 0.5001, Val Loss: 0.4995
+Epoch 6/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 7/300 | Train Loss: 0.5000, Val Loss: 0.4995
+Epoch 8/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 9/300 | Train Loss: 0.5001, Val Loss: 0.4995
+Epoch 10/300 | Train Loss: 0.4998, Val Loss: 0.4996
+Epoch 11/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 12/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 13/300 | Train Loss: 0.4999, Val Loss: 0.4996
+Epoch 14/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 15/300 | Train Loss: 0.5002, Val Loss: 0.4996
+Epoch 16/300 | Train Loss: 0.5001, Val Loss: 0.4996
+Epoch 17/300 | Train Loss: 0.4999, Val Loss: 0.4995
+Epoch 18/300 | Train Loss: 0.5001, Val Loss: 0.4996
+Epoch 19/300 | Train Loss: 0.5002, Val Loss: 0.4996
+Epoch 20/300 | Train Loss: 0.5000, Val Loss: 0.4996
+Epoch 21/300 | Train Loss: 0.5001, Val Loss: 0.4995
+Epoch 22/300 | Train Loss: 0.5001, Val Loss: 0.4996
+Epoch 23/300 | Train Loss: 0.5001, Val Loss: 0.4996
+Epoch 24/300 | Train Loss: 0.5001, Val Loss: 0.4996
+Epoch 25/300 | Train Loss: 0.5001, Val Loss: 0.4995
+Epoch 26/300 | Train Loss: 0.4998, Val Loss: 0.4993
+Epoch 27/300 | Train Loss: 0.4996, Val Loss: 0.4986
+Epoch 28/300 | Train Loss: 0.4981, Val Loss: 0.4963
+Epoch 29/300 | Train Loss: 0.4965, Val Loss: 0.4947
+Epoch 30/300 | Train Loss: 0.4943, Val Loss: 0.4931
+Epoch 31/300 | Train Loss: 0.4930, Val Loss: 0.4915
+Epoch 32/300 | Train Loss: 0.4908, Val Loss: 0.4890
+Epoch 33/300 | Train Loss: 0.4883, Val Loss: 0.4853
+Epoch 34/300 | Train Loss: 0.4837, Val Loss: 0.4824
+Epoch 35/300 | Train Loss: 0.4809, Val Loss: 0.4779
+Epoch 36/300 | Train Loss: 0.4767, Val Loss: 0.4718
+Epoch 37/300 | Train Loss: 0.4698, Val Loss: 0.4664
+Epoch 38/300 | Train Loss: 0.4684, Val Loss: 0.4629
+Epoch 39/300 | Train Loss: 0.4645, Val Loss: 0.4592
+Epoch 40/300 | Train Loss: 0.4596, Val Loss: 0.4547
+Epoch 41/300 | Train Loss: 0.4568, Val Loss: 0.4509
+Epoch 42/300 | Train Loss: 0.4525, Val Loss: 0.4468
+Epoch 43/300 | Train Loss: 0.4473, Val Loss: 0.4402
+Epoch 44/300 | Train Loss: 0.4430, Val Loss: 0.4350
+Epoch 45/300 | Train Loss: 0.4381, Val Loss: 0.4304
+Epoch 46/300 | Train Loss: 0.4331, Val Loss: 0.4256
+Epoch 47/300 | Train Loss: 0.4276, Val Loss: 0.4223
+Epoch 48/300 | Train Loss: 0.4286, Val Loss: 0.4191
+Epoch 49/300 | Train Loss: 0.4251, Val Loss: 0.4164
+Epoch 50/300 | Train Loss: 0.4199, Val Loss: 0.4142
+Epoch 51/300 | Train Loss: 0.4187, Val Loss: 0.4121
+Epoch 52/300 | Train Loss: 0.4168, Val Loss: 0.4100
+Epoch 53/300 | Train Loss: 0.4128, Val Loss: 0.4074
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies_reconstruction.py", line 197, in <module>
+    loss.backward()
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

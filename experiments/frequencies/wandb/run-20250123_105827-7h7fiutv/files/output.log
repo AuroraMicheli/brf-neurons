@@ -1,0 +1,84 @@
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 1/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 2/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 3/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 4/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 5/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 6/300 | Train Loss: 1.0986, Train Acc: 0.3271, Val Loss: 1.0986, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 7/300 | Train Loss: 1.0984, Train Acc: 0.3271, Val Loss: 1.0966, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 8/300 | Train Loss: 1.0927, Train Acc: 0.3271, Val Loss: 1.0845, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 9/300 | Train Loss: 1.0776, Train Acc: 0.3271, Val Loss: 1.0621, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 10/300 | Train Loss: 1.0528, Train Acc: 0.3271, Val Loss: 1.0203, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 11/300 | Train Loss: 1.0095, Train Acc: 0.3271, Val Loss: 0.9736, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 12/300 | Train Loss: 0.9635, Train Acc: 0.3271, Val Loss: 0.9310, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 13/300 | Train Loss: 0.9353, Train Acc: 0.3271, Val Loss: 0.8926, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 14/300 | Train Loss: 0.9083, Train Acc: 0.3271, Val Loss: 0.8641, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 15/300 | Train Loss: 0.8826, Train Acc: 0.3271, Val Loss: 0.8491, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 16/300 | Train Loss: 0.8685, Train Acc: 0.3271, Val Loss: 0.8322, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 17/300 | Train Loss: 0.8498, Train Acc: 0.3271, Val Loss: 0.8017, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 18/300 | Train Loss: 0.8098, Train Acc: 0.3271, Val Loss: 0.7630, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 19/300 | Train Loss: 0.7967, Train Acc: 0.3271, Val Loss: 0.7493, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 20/300 | Train Loss: 0.7808, Train Acc: 0.3271, Val Loss: 0.7406, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 21/300 | Train Loss: 0.7718, Train Acc: 0.3271, Val Loss: 0.7262, Val Acc: 0.3689
+torch.Size([100, 256, 3])
+torch.Size([100, 194, 3])
+Epoch 22/300 | Train Loss: 0.7575, Train Acc: 0.3271, Val Loss: 0.7266, Val Acc: 0.3689
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies.py", line 230, in <module>
+    for inputs, targets in train_loader:
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 633, in __next__
+    data = self._next_data()
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1317, in _next_data
+    self._shutdown_workers()
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1442, in _shutdown_workers
+    w.join(timeout=_utils.MP_STATUS_CHECK_INTERVAL)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/multiprocessing/popen_fork.py", line 40, in wait
+    if not wait([self.sentinel], timeout):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/multiprocessing/connection.py", line 936, in wait
+    ready = selector.select(timeout)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/selectors.py", line 416, in select
+    fd_event_list = self._selector.poll(timeout)
+KeyboardInterrupt

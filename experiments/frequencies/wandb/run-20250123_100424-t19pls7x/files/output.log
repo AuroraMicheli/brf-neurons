@@ -1,0 +1,106 @@
+Epoch 1/300 | Train Loss: 0.5026, Val Loss: 0.4998
+Epoch 2/300 | Train Loss: 0.5009, Val Loss: 0.4995
+Epoch 3/300 | Train Loss: 0.5001, Val Loss: 0.4988
+Epoch 4/300 | Train Loss: 0.5000, Val Loss: 0.4974
+Epoch 5/300 | Train Loss: 0.4961, Val Loss: 0.4891
+Epoch 6/300 | Train Loss: 0.4827, Val Loss: 0.4756
+Epoch 7/300 | Train Loss: 0.4688, Val Loss: 0.4631
+Epoch 8/300 | Train Loss: 0.4593, Val Loss: 0.4659
+Epoch 9/300 | Train Loss: 0.4602, Val Loss: 0.4641
+Epoch 10/300 | Train Loss: 0.4605, Val Loss: 0.4616
+Epoch 11/300 | Train Loss: 0.4612, Val Loss: 0.4615
+Epoch 12/300 | Train Loss: 0.4539, Val Loss: 0.4461
+Epoch 13/300 | Train Loss: 0.4311, Val Loss: 0.4155
+Epoch 14/300 | Train Loss: 0.3970, Val Loss: 0.3906
+Epoch 15/300 | Train Loss: 0.3737, Val Loss: 0.3669
+Epoch 16/300 | Train Loss: 0.3683, Val Loss: 0.3648
+Epoch 17/300 | Train Loss: 0.3499, Val Loss: 0.3395
+Epoch 18/300 | Train Loss: 0.3317, Val Loss: 0.3292
+Epoch 19/300 | Train Loss: 0.3217, Val Loss: 0.3205
+Epoch 20/300 | Train Loss: 0.3101, Val Loss: 0.3060
+Epoch 21/300 | Train Loss: 0.2950, Val Loss: 0.2953
+Epoch 22/300 | Train Loss: 0.2916, Val Loss: 0.2951
+Epoch 23/300 | Train Loss: 0.2902, Val Loss: 0.2882
+Epoch 24/300 | Train Loss: 0.2749, Val Loss: 0.2674
+Epoch 25/300 | Train Loss: 0.2572, Val Loss: 0.2519
+Epoch 26/300 | Train Loss: 0.2568, Val Loss: 0.2611
+Epoch 27/300 | Train Loss: 0.2524, Val Loss: 0.2467
+Epoch 28/300 | Train Loss: 0.2419, Val Loss: 0.2359
+Epoch 29/300 | Train Loss: 0.2290, Val Loss: 0.2224
+Epoch 30/300 | Train Loss: 0.2197, Val Loss: 0.2166
+Epoch 31/300 | Train Loss: 0.2137, Val Loss: 0.2115
+Epoch 32/300 | Train Loss: 0.2112, Val Loss: 0.2127
+Epoch 33/300 | Train Loss: 0.2133, Val Loss: 0.2125
+Epoch 34/300 | Train Loss: 0.2130, Val Loss: 0.2104
+Epoch 35/300 | Train Loss: 0.2101, Val Loss: 0.2087
+Epoch 36/300 | Train Loss: 0.2091, Val Loss: 0.2072
+Epoch 37/300 | Train Loss: 0.2090, Val Loss: 0.2106
+Epoch 38/300 | Train Loss: 0.2150, Val Loss: 0.2114
+Epoch 39/300 | Train Loss: 0.2128, Val Loss: 0.2120
+Epoch 40/300 | Train Loss: 0.2101, Val Loss: 0.2101
+Epoch 41/300 | Train Loss: 0.2057, Val Loss: 0.2002
+Epoch 42/300 | Train Loss: 0.2043, Val Loss: 0.2088
+Epoch 43/300 | Train Loss: 0.2083, Val Loss: 0.2118
+Epoch 44/300 | Train Loss: 0.2094, Val Loss: 0.2069
+Epoch 45/300 | Train Loss: 0.1993, Val Loss: 0.2013
+Epoch 46/300 | Train Loss: 0.1990, Val Loss: 0.2018
+Epoch 47/300 | Train Loss: 0.1985, Val Loss: 0.2020
+Epoch 48/300 | Train Loss: 0.1990, Val Loss: 0.2031
+Epoch 49/300 | Train Loss: 0.1994, Val Loss: 0.2025
+Epoch 50/300 | Train Loss: 0.1994, Val Loss: 0.2026
+Epoch 51/300 | Train Loss: 0.2008, Val Loss: 0.2039
+Epoch 52/300 | Train Loss: 0.2000, Val Loss: 0.2017
+Epoch 53/300 | Train Loss: 0.1996, Val Loss: 0.2017
+Epoch 54/300 | Train Loss: 0.1995, Val Loss: 0.2005
+Epoch 55/300 | Train Loss: 0.1973, Val Loss: 0.1988
+Epoch 56/300 | Train Loss: 0.1965, Val Loss: 0.1993
+Epoch 57/300 | Train Loss: 0.1978, Val Loss: 0.1994
+Epoch 58/300 | Train Loss: 0.1984, Val Loss: 0.2041
+Epoch 59/300 | Train Loss: 0.2033, Val Loss: 0.2077
+Epoch 60/300 | Train Loss: 0.2106, Val Loss: 0.2151
+Epoch 61/300 | Train Loss: 0.2136, Val Loss: 0.2173
+Epoch 62/300 | Train Loss: 0.2147, Val Loss: 0.2187
+Epoch 63/300 | Train Loss: 0.2129, Val Loss: 0.2155
+Epoch 64/300 | Train Loss: 0.2091, Val Loss: 0.2095
+Epoch 65/300 | Train Loss: 0.2073, Val Loss: 0.2071
+Epoch 66/300 | Train Loss: 0.2047, Val Loss: 0.2054
+Epoch 67/300 | Train Loss: 0.2068, Val Loss: 0.2087
+Epoch 68/300 | Train Loss: 0.2105, Val Loss: 0.2145
+Epoch 69/300 | Train Loss: 0.2146, Val Loss: 0.2184
+Epoch 70/300 | Train Loss: 0.2173, Val Loss: 0.2188
+Epoch 71/300 | Train Loss: 0.2160, Val Loss: 0.2141
+Epoch 72/300 | Train Loss: 0.2107, Val Loss: 0.2097
+Epoch 73/300 | Train Loss: 0.2053, Val Loss: 0.2066
+Epoch 74/300 | Train Loss: 0.2036, Val Loss: 0.2024
+Epoch 75/300 | Train Loss: 0.1995, Val Loss: 0.1995
+Epoch 76/300 | Train Loss: 0.1977, Val Loss: 0.1988
+Epoch 77/300 | Train Loss: 0.1990, Val Loss: 0.1952
+Epoch 78/300 | Train Loss: 0.1925, Val Loss: 0.1936
+Epoch 79/300 | Train Loss: 0.1923, Val Loss: 0.1956
+Epoch 80/300 | Train Loss: 0.1968, Val Loss: 0.1996
+Epoch 81/300 | Train Loss: 0.2019, Val Loss: 0.2082
+Epoch 82/300 | Train Loss: 0.2120, Val Loss: 0.2150
+Epoch 83/300 | Train Loss: 0.2152, Val Loss: 0.2181
+Epoch 84/300 | Train Loss: 0.2178, Val Loss: 0.2192
+Epoch 85/300 | Train Loss: 0.2164, Val Loss: 0.2190
+Epoch 86/300 | Train Loss: 0.2184, Val Loss: 0.2172
+Epoch 87/300 | Train Loss: 0.2156, Val Loss: 0.2159
+Epoch 88/300 | Train Loss: 0.2161, Val Loss: 0.2155
+Epoch 89/300 | Train Loss: 0.2146, Val Loss: 0.2150
+Epoch 90/300 | Train Loss: 0.2142, Val Loss: 0.2129
+Traceback (most recent call last):
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies_reconstruction.py", line 204, in <module>
+    val_loss, val_examples = evaluate(val_loader)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/frequencies_reconstruction.py", line 159, in evaluate
+    outputs, _, _ = model(inputs.permute(1, 0, 2))  # Adjust for [seq_len, batch, input_size]
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/models/resonaternns.py", line 97, in forward
+    hidden_z, hidden_u, hidden_v, hidden_q = self.hidden(
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/envs/brf/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/modules/rf.py", line 292, in forward
+    z, u, v, q = brf_II_update( #II for better stability
+  File "/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/../../snn/modules/rf.py", line 98, in brf_II_update
+    exp_bdt = torch.exp(b * dt)
+KeyboardInterrupt
