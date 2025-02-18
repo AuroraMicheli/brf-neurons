@@ -7,11 +7,18 @@ import math
 import random
 import sys
 import numpy
+import matplotlib
+print(matplotlib.__version__)
 import wandb
 import os
 sys.path.append("../..")
 import snn
 import tools
+
+seed=50 #with seed 42, acc=100 after 24 epochs. with seed 50, acc=30 after >40 epochs
+random.seed(seed)
+torch.manual_seed(seed)
+numpy.random.seed(seed)
 
 ################################################################
 # General settings
@@ -64,7 +71,7 @@ class SineWaveDataset(Dataset):
 ################################################################
 
 rand_num = random.randint(1, 10000)
-omega_list = [10.0, 22.0, 32.0]
+omega_list = [10.0, 27.0, 46.0]
 amplitude = 1.0
 phase_range = (0, 2 * math.pi)
 sequence_length = 100

@@ -51,10 +51,10 @@ class SimpleResRNN(torch.nn.Module):
             layer_size=hidden_size,
             bias=hidden_bias,
             mask_prob=mask_prob,
-            adaptive_omega=True,
+            adaptive_omega=False, #changed to false: no learning
             adaptive_omega_a=adaptive_omega_a,
             adaptive_omega_b=adaptive_omega_b,
-            adaptive_b_offset=True,
+            adaptive_b_offset=False, #changed to false: no learning
             adaptive_b_offset_a=adaptive_b_offset_a,
             adaptive_b_offset_b=adaptive_b_offset_b,
             dt=dt,
@@ -65,7 +65,7 @@ class SimpleResRNN(torch.nn.Module):
         self.out = modules.LICell(
             input_size=hidden_size,
             layer_size=output_size,
-            adaptive_tau_mem=True,
+            adaptive_tau_mem=False, #changed to false: no learning
             adaptive_tau_mem_mean=out_adaptive_tau_mem_mean,
             adaptive_tau_mem_std=out_adaptive_tau_mem_std,
             bias=output_bias,

@@ -23,7 +23,8 @@ DEFAULT_RF_OMEGA = 10.
 DEFAULT_RF_ADAPTIVE_OMEGA_a = 5.
 DEFAULT_RF_ADAPTIVE_OMEGA_b = 10.
 
-DEFAULT_RF_THETA = 1.  # 1.0 # * 0.1
+#DEFAULT_RF_THETA = 1.  # 1.0  # * 0.1
+DEFAULT_RF_THETA = 0.1 #Changed this for visualization experiments with sine waves
 
 DEFAULT_DT = 0.01
 FACTOR = 1 / (DEFAULT_DT * 2)
