@@ -21,31 +21,30 @@ pin_memory = device.type == "cuda"
 num_workers = 1 if device.type == "cuda" else 0
 print(f"Using device: {device}")
 
-################################################################
-# Custom dataset for sine wave classification
-################################################################
-class SineWaveDataset(Dataset):
-    def __init__(self, omega_list, amplitude, phase_range, sequence_length, dt, num_samples, noise_std=0.05):
+
+class BinarySineDataset(Dataset):
+    def __init__(self, omega_list, dt, sequence_length, num_samples):
         self.omega_list = omega_list
-        self.amplitude = amplitude
-        self.phase_range = phase_range
-        self.sequence_length = sequence_length
         self.dt = dt
+        self.sequence_length = sequence_length
         self.num_samples = num_samples
-        self.noise_std = noise_std
         self.data = []
         self.labels = []
         self._generate_dataset()
 
     def _generate_dataset(self):
-        t = torch.arange(0, self.sequence_length * self.dt, self.dt)
         for label, omega in enumerate(self.omega_list):
+            period = (2 * math.pi) / omega  # Compute the period of the sine wave
+            step_interval = max(1, round(period / self.dt))  # Convert to discrete steps
+            
             for _ in range(self.num_samples // len(self.omega_list)):
-                phase = random.uniform(*self.phase_range)
-                sine_wave = self.amplitude * torch.sin(omega * t + phase) 
-                noise = torch.normal(0, self.noise_std, size=sine_wave.size())
-                noisy_wave = sine_wave + noise
-                self.data.append(noisy_wave.unsqueeze(-1))  # Add feature dimension
+                sequence = torch.zeros(self.sequence_length)
+                index = 0  # Start placing '1's from the beginning
+                while index < self.sequence_length:
+                    sequence[index] = 50  # Place a spike
+                    index += step_interval  # Move forward by step_interval
+                
+                self.data.append(sequence.unsqueeze(-1))  # Add feature dimension
                 self.labels.append(label)
 
         self.data = torch.stack(self.data)
@@ -57,50 +56,38 @@ class SineWaveDataset(Dataset):
     def __getitem__(self, idx):
         return self.data[idx], self.labels[idx]
 
-################################################################
-# Data preparation
-################################################################
-
-rand_num = random.randint(1, 10000)
-omega_list = [10.0, 26.0, 57.0]
-omega_list_neurons = [26.0]
-amplitude = 1
-#phase_range = (0, 2 * math.pi)
-phase_range = (0, 0) # No phase shift
+# Parameters
+omega_list = [10.0, 22.0, 46.0]  # Angular frequencies
 sequence_length = 100
-dt = 0.01
 num_samples = 3000
-noise_std = 0.00
+dt = 0.01
 batch_size = 256
 
-sine_dataset = SineWaveDataset(
-    omega_list=omega_list,
-    amplitude=amplitude,
-    phase_range=phase_range,
-    sequence_length=sequence_length,
-    dt=dt,
-    num_samples=num_samples,
-    noise_std=noise_std
+# Create dataset
+binary_sine_dataset = BinarySineDataset(
+    omega_list=omega_list, dt=dt, sequence_length=sequence_length, num_samples=num_samples
 )
 
 # Split into train, validation, and test sets (70/15/15 split)
-train_size = int(0.7 * len(sine_dataset))
-val_size = int(0.15 * len(sine_dataset))
-test_size = len(sine_dataset) - train_size - val_size
+train_size = int(0.7 * len(binary_sine_dataset))
+val_size = int(0.15 * len(binary_sine_dataset))
+test_size = len(binary_sine_dataset) - train_size - val_size
 
-train_dataset, val_dataset, test_dataset = random_split(sine_dataset, [train_size, val_size, test_size])
+train_dataset, val_dataset, test_dataset = random_split(binary_sine_dataset, [train_size, val_size, test_size])
 
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=pin_memory, num_workers=num_workers)
-val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, pin_memory=pin_memory, num_workers=num_workers)
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin_memory=pin_memory, num_workers=num_workers)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 
 # Model setup
+#omega_list = [10.0, 27.0, 78.0]
+dt = 0.01
 hidden_size = 1
 num_classes = len(omega_list)
 input_size = 1  # Single feature per time step
 
-omega_list_neurons = [10.0] #I only have 1 hidden neuron now
+omega_list_neurons = [10.0]
 # Define your SNN model (update this import if necessary)
 model = snn.models.SimpleResRNN(
     input_size=input_size,
@@ -108,7 +95,7 @@ model = snn.models.SimpleResRNN(
     output_size=num_classes,
     #adaptive_omega_a=15.0,
     #adaptive_omega_b=85.0,
-    adaptive_omega_a=min(omega_list)- 0.5,  #now adaptive omega is false
+    adaptive_omega_a=min(omega_list)- 0.5,
     adaptive_omega_b=max(omega_list)+0.5,
     adaptive_b_offset_a=0.1,
     adaptive_b_offset_b=1.0,
@@ -138,47 +125,50 @@ class_samples = get_random_sample_per_class(test_dataset, num_classes)
 
 # Prepare inputs and labels
 inputs = torch.stack([class_samples[i][0] for i in range(num_classes)]).to(device)
-#print(inputs.shape)
+#print(inputs[0,:,:])
 labels = torch.tensor([class_samples[i][1] for i in range(num_classes)]).to(device)
 
 ################################################################
 # Function to save input sine waveforms
 ################################################################
 
-def save_input_waveforms(inputs, labels, omega_list, dt):
+def save_binary_sequences(inputs, labels, omega_list, dt):
     """
-    Save a plot of the three input sine waves.
+    Save a raster plot of the binary sequences with time on the x-axis.
     
-    inputs: Tensor of shape (num_classes, sequence_length, 1)
-    labels: Tensor of shape (num_classes,)
+    inputs: Tensor of shape (num_samples, sequence_length, 1)
+    labels: Tensor of shape (num_samples,)
     omega_list: List of omega values
-    dt: Time step used for sampling the sine waves
+    dt: Time step used for sampling the binary sequences
     """
 
-    num_classes, sequence_length, _ = inputs.shape
+    num_samples, sequence_length, _ = inputs.shape
     time_axis = np.arange(0, sequence_length * dt, dt)
 
-    plt.figure(figsize=(12, 4))
-    for i in range(num_classes):
-        plt.plot(time_axis, inputs[i, :, 0].cpu().numpy(), label=f"Class {labels[i].item()} (Omega: {omega_list[labels[i].item()]})")
+    plt.figure(figsize=(12, 6))
+    for i in range(num_samples):
+        # Plot spikes as vertical lines at each 1 in the binary sequence
+        spike_times = time_axis[inputs[i, :, 0].cpu().numpy() !=0]
+        plt.scatter(spike_times, np.ones_like(spike_times) * i, c='black', marker='|', s=50)
 
     plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude")
-    plt.title("Input Sine Waveforms")
-    plt.legend()
+    plt.ylabel("Sample Index")
+    plt.title("Binary Sequence Raster Plot")
+    plt.yticks(np.arange(0, num_samples, step=1), labels=np.arange(0, num_samples, step=1))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig("input_waveforms.png")
+    #plt.legend()
+    plt.savefig("binary_sequence_raster_plot.png")
     plt.close()
 
-# Call the function to save the plot
-save_input_waveforms(inputs, labels, omega_list, dt)
-print("Input waveforms saved as 'input_waveforms.png'")
+# Call the function to save the raster plot
+save_binary_sequences(inputs, labels, omega_list, dt)
+print("Binary sequence raster plot saved as 'binary_sequence_raster_plot.png'")
 
 
 # Function to save raster plot as an image
 
-def save_raster_plot(spikes, labels, omega_list, save_path="raster_plot"):
+def save_raster_plot(spikes, labels, omega_list, save_path="raster_plot_binary.png"):
     """
     Save separate raster plots for each sample/class in the dataset.
     
@@ -188,7 +178,7 @@ def save_raster_plot(spikes, labels, omega_list, save_path="raster_plot"):
     save_path: file path prefix for saving raster plots.
     """
     num_samples, time_steps, num_neurons = spikes.shape  # (S, T, N)
-    #print(spikes.shape)
+
     for sample_idx in range(num_samples):
         fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -203,13 +193,14 @@ def save_raster_plot(spikes, labels, omega_list, save_path="raster_plot"):
         ax.set_yticks(range(num_neurons))
         ax.set_yticklabels([f"Neuron {i}" for i in range(num_neurons)])
         ax.set_title(f"Sample {sample_idx} - Class {labels[sample_idx].item()} - Omega: {omega_list[labels[sample_idx].item()]}")
-
+        #ax.legend()
         # Save each figure separately
         plt.tight_layout()
+        #ax.legend()
         plt.savefig(f"{save_path}_sample{sample_idx}.png")
         plt.close()
 
-def save_hidden_u_plot(hidden_values, labels, omega_list, save_path="hidden_u_plot"):
+def save_hidden_u_plot(hidden_values, labels, omega_list, save_path="hidden_u_plot_binary.png"):
     """
     Save a plot of the hidden state values over time for each class.
     
@@ -220,7 +211,6 @@ def save_hidden_u_plot(hidden_values, labels, omega_list, save_path="hidden_u_pl
     """
    
     num_samples, time_steps, num_neurons = hidden_values.shape
-    #print(hidden_values.shape)
     time_axis = np.arange(time_steps)
 
     for sample_idx in range(num_samples):
@@ -234,16 +224,17 @@ def save_hidden_u_plot(hidden_values, labels, omega_list, save_path="hidden_u_pl
         ax.set_ylabel("U values")
         #ax.set_yticks(range(num_neurons))
         #ax.set_yticklabels([f"Neuron {i}" for i in range(num_neurons)])
-        ax.set_title(f"Sample {sample_idx} - Class {labels[sample_idx].item()} - Omega: {omega_list[labels[sample_idx].item()]}")
+        #ax.set_title(f"Sample {sample_idx} - Class {labels[sample_idx].item()} - Omega: {omega_list[labels[sample_idx].item()]}")
         ax.legend()
         # Save each figure separately
         plt.tight_layout()
+        #plt.legend()
         plt.savefig(f"{save_path}_sample{sample_idx}.png")
         plt.close()
-                                 
+
 
 # Pass through model one sample at a time
-hidden_spikes_list = []        
+hidden_spikes_list = []
 hidden_u_list=[]
 
 with torch.no_grad():
@@ -253,7 +244,9 @@ with torch.no_grad():
             input_size=input_size,
             hidden_size=hidden_size,
             output_size=num_classes,
-            adaptive_omega_a=min(omega_list)-0.5,
+            #adaptive_omega_a=15.0,
+            #adaptive_omega_b=85.0,
+            adaptive_omega_a=min(omega_list)- 0.5,
             adaptive_omega_b=max(omega_list)+0.5,
             adaptive_b_offset_a=0.1,
             adaptive_b_offset_b=1.0,
@@ -263,17 +256,15 @@ with torch.no_grad():
             mask_prob=0.0,
             output_bias=False,
             initial_omegas=omega_list_neurons
-        ).to(device)
+            ).to(device)
+        
         #print(inputs.shape)
-        input_sample = inputs[i].unsqueeze(0).permute(1,0,2)  # Add batch dimension -> [1, 1000, 1]
-        #
-        # 
-        #print(input_sample.shape)
+        input_sample = inputs[i].unsqueeze(0)  # Add batch dimension -> [1, 1000, 1]
         output, (hidden_states, out_u), num_spikes = model(input_sample)
         
         hidden_z = hidden_states[0]  # Extract hidden spikes
-        hidden_u = hidden_states[1] # Extract hidden u values
-        #print(hidden_z.shape)
+        hidden_u = hidden_states[1]
+        #print(hidden_u.shape)
         # Ensure shape is [time_steps, num_neurons]
         hidden_spikes_list.append(hidden_z.squeeze(0).cpu().numpy())  
         hidden_u_list.append(hidden_u.squeeze(0).cpu().numpy())
@@ -281,12 +272,9 @@ with torch.no_grad():
 # Stack to get shape (num_samples, time_steps, num_neurons)
 hidden_spikes = np.stack(hidden_spikes_list, axis=0)
 hidden_u = np.stack(hidden_u_list, axis=0)
-#print(hidden_u.shape)
-#print(hidden_spikes.shape)
-
 
 # Save raster plot for each sample
-#save_raster_plot(hidden_spikes, labels, omega_list)
-#save_hidden_u_plot(hidden_u, labels, omega_list, save_path="hidden_u_plot")
-#print("Raster plot saved as 'raster_plots.png'")
+save_raster_plot(hidden_spikes, labels, omega_list)
+save_hidden_u_plot(hidden_u, labels, omega_list, save_path="hidden_u_plot_binary.png")
+print("Raster plot saved as 'raster_plots_binary.png'")
 

@@ -8,7 +8,7 @@ import random
 import sys
 import numpy
 import matplotlib
-print(matplotlib.__version__)
+#print(matplotlib.__version__)
 import wandb
 import os
 sys.path.append("../..")
@@ -71,10 +71,10 @@ class SineWaveDataset(Dataset):
 ################################################################
 
 rand_num = random.randint(1, 10000)
-omega_list = [10.0, 27.0, 46.0]
+omega_list = [10.0, 17.0, 25.0]
 amplitude = 1.0
 phase_range = (0, 2 * math.pi)
-sequence_length = 100
+sequence_length = 200
 dt = 0.01
 num_samples = 3000
 noise_std = 0.00
@@ -231,7 +231,7 @@ for epoch in range(epochs):
 
     if val_loss < best_val_loss:
         best_val_loss = val_loss
-        torch.save(model.state_dict(), save_path)
+        #torch.save(model.state_dict(), save_path)
 
     scheduler.step()
 
