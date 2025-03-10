@@ -142,7 +142,7 @@ plot_samples(dataset, class_samples, num_classes)
 
 
 # Define the BRF update function
-def brf_II_update(x, z_, u_, v_, q_, b_0, omega, dt=0.01, theta=0.1, gamma=0.5):
+def brf_II_update(x, z_, u_, v_, q_, b_0, omega, dt=0.01, theta=0.1, gamma=0.8):
     b = b_0 - q_
     
     exp_bdt = torch.exp(b * dt)

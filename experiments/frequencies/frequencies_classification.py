@@ -74,6 +74,7 @@ rand_num = random.randint(1, 10000)
 omega_list = [10.0, 17.0, 25.0]
 amplitude = 1.0
 phase_range = (0, 2 * math.pi)
+#phase_range = (0, 0)
 sequence_length = 200
 dt = 0.01
 num_samples = 3000
@@ -202,7 +203,9 @@ for epoch in range(epochs):
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
-
+        
+        print(model.out.linear.weight.data)
+        
         total_loss += loss.item()
         correct += (outputs.mean(dim=0).argmax(dim=1) == targets).sum().item()
 
