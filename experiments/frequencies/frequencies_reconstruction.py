@@ -12,11 +12,15 @@ import os
 sys.path.append("../..")
 import snn
 import tools
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 ################################################################
 # General settings
 ################################################################
+seed=45 #with seed 42, acc=100 after 24 epochs. with seed 50, acc=30 after >40 epochs
+random.seed(seed)
+torch.manual_seed(seed)
+numpy.random.seed(seed)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 pin_memory = device.type == "cuda"
@@ -62,10 +66,13 @@ class SineWaveDataset(Dataset):
 ################################################################
 
 rand_num = random.randint(1, 10000)
-omega_list = [10.0, 22.0, 32.0]
+omega_list = [5, 17, 25]
+omega_list_neurons = [5,17,25]
+
 amplitude = 1.0
-phase_range = (0, 2 * math.pi)
-sequence_length = 100
+#phase_range = (0, 2 * math.pi)
+phase_range = (0, 0)
+sequence_length = 200
 dt = 0.01
 num_samples = 3000
 noise_std = 0.00
@@ -96,7 +103,7 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin
 # Reconstruction model setup
 ################################################################
 
-hidden_size = 5
+hidden_size = 3
 input_size = 1  # Single feature per time step
 
 # Define your SNN model for reconstruction
@@ -113,8 +120,10 @@ model = snn.models.SimpleResRNN(
     label_last=False,  # Output the full sequence
     mask_prob=0.0,
     output_bias=True,
+    initial_omegas=omega_list_neurons
 ).to(device)
 
+model = torch.jit.script(model)
 ################################################################
 # Experiment setup with Weights & Biases
 ################################################################
@@ -122,8 +131,8 @@ model = snn.models.SimpleResRNN(
 wandb.init(
     project="sine-wave-reconstruction",
     config={
-        "learning_rate": 0.1,
-        "epochs": 300,
+        "learning_rate": 1.0,
+        "epochs": 50,
         "batch_size": batch_size,
         "hidden_size": hidden_size,
         "sequence_length": sequence_length,
@@ -138,7 +147,8 @@ wandb.init(
 config = wandb.config
 
 criterion = nn.MSELoss()  # Use mean squared error for reconstruction
-optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+#optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=0.9)
 scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1 - epoch / config.epochs)
 
 os.makedirs("models", exist_ok=True)
@@ -152,32 +162,38 @@ def evaluate(loader):
     model.eval()
     total_loss = 0
     examples = []
+    membranes=[]
 
     with torch.no_grad():
         for inputs, targets in loader:
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs, _, _ = model(inputs.permute(1, 0, 2))  # Adjust for [seq_len, batch, input_size]
-            loss = criterion(outputs.permute(1, 0, 2), targets)
+            outputs, ((hidden_z, hidden_u), out_u), num_spikes  = model(inputs.permute(1, 0, 2))  # Adjust for [seq_len, batch, input_size]
+            
+            #print(targets.shape)
+            #print("inputs shape:", inputs.permute(1, 0, 2).shape)  #[200, 256, 1]
+            #print("hidden_u shape", hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)   #[200, 256, 1]
+            #print(hidden_u[10].shape)
+            #print(hidden_u[10])
+            #print(hidden_u[:,5,:].shape)
+
+            loss = criterion(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), targets)
             total_loss += loss.item()
 
+            inputs=inputs.permute(1, 0, 2)
             # Log a few examples
-            if len(examples) < 3:  # Log up to 3 examples
-                examples.append((inputs[0].cpu(), outputs[0].cpu()))
-
+            for i in range(min(inputs.shape[0], 5 - len(examples))):  # Add up to 5 unique samples total
+                examples.append((inputs[:, i, :].cpu(), hidden_u.sum(dim=2).unsqueeze(-1)[:, i, :].cpu()))
+                membranes.append(hidden_u[:, i, :].cpu())
+                if len(examples) >= 5:
+                    break
+            '''''
+            if len(examples) < 5:  # Log up to 3 examples
+                examples.append((inputs[:,5,:].cpu(), hidden_u.sum(dim=2).unsqueeze(-1)[:,5,:].cpu()))
+                membranes.append(hidden_u[:,5,:].cpu())
+            '''''
     avg_loss = total_loss / len(loader)
-    return avg_loss, examples
-'''
-def visualize_reconstruction(inputs, outputs, epoch):
-    plt.figure(figsize=(12, 6))
-    plt.plot(inputs, label="Ground Truth", color="blue", alpha=0.6)
-    plt.plot(outputs, label="Reconstruction", color="orange", alpha=0.8)
-    plt.legend()
-    plt.title(f"Reconstruction at Epoch {epoch}")
-    plt.xlabel("Time Steps")
-    plt.ylabel("Amplitude")
-    wandb.log({"Reconstruction Example": wandb.Image(plt)})
-    plt.close()
-'''
+    return avg_loss, examples, membranes
+
 ################################################################
 # Training loop with wandb logging
 ################################################################
@@ -192,8 +208,8 @@ for epoch in range(epochs):
     for inputs, targets in train_loader:
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
-        outputs, _, _ = model(inputs.permute(1, 0, 2))
-        loss = criterion(outputs.permute(1, 0, 2), targets)
+        outputs, ((hidden_z, hidden_u), out_u), num_spikes  = model(inputs.permute(1, 0, 2))
+        loss = criterion(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), targets)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
@@ -201,7 +217,7 @@ for epoch in range(epochs):
         total_loss += loss.item()
 
     train_loss = total_loss / len(train_loader)
-    val_loss, val_examples = evaluate(val_loader)
+    val_loss, val_examples, membranes = evaluate(val_loader)
 
     # Log metrics and examples to wandb
     wandb.log({
@@ -220,7 +236,7 @@ for epoch in range(epochs):
 
     if val_loss < best_val_loss:
         best_val_loss = val_loss
-        torch.save(model.state_dict(), save_path)
+        #torch.save(model.state_dict(), save_path)
 
     scheduler.step()
 
@@ -230,17 +246,21 @@ print("Training complete. Best model saved to", save_path)
 # Testing on unseen data and visualization
 ################################################################
 
-test_loss, test_examples = evaluate(test_loader)
+test_loss, test_examples, membranes  = evaluate(test_loader)
 print(f"Test Loss: {test_loss:.4f}")
 
-'''
 for i, (inputs, outputs) in enumerate(test_examples):
     plt.figure(figsize=(12, 6))
     plt.plot(inputs.numpy(), label="Ground Truth", color="blue", alpha=0.6)
-    plt.plot(outputs.numpy(), label="Reconstruction", color="orange", alpha=0.8)
+    plt.plot(outputs.numpy(), label="Reconstruction", color="red", alpha=0.8)
+    membrane = membranes[i]  # shape: [seq_len, num_neurons] (e.g. [200, 3])
+    for j in range(membrane.shape[1]):  # iterate over neurons
+        plt.plot(membrane[:, j].numpy(), label=f"Membrane Neuron {j}", alpha=0.5)
+
     plt.legend()
     plt.title(f"Test Example {i+1}")
     plt.xlabel("Time Steps")
     plt.ylabel("Amplitude")
-    plt.show()
-'''
+    plt.tight_layout()
+    plt.savefig(f"reconstruction_example_{i+1}.png")
+    plt.close()

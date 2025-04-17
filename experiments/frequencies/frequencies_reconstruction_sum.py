@@ -7,24 +7,20 @@ import math
 import random
 import sys
 import numpy
-import matplotlib
-#print(matplotlib.__version__)
 import wandb
 import os
 sys.path.append("../..")
 import snn
 import tools
-
-os.environ['WANDB_DIR'] = '/tudelft.net/staff-bulk/ewi/insy/VisionLab/amicheli/brf-neurons/experiments/frequencies/wandb/tmp'
-
-seed=45 #with seed 42, acc=100 after 24 epochs. with seed 50, acc=30 after >40 epochs
-random.seed(seed)
-torch.manual_seed(seed)
-numpy.random.seed(seed)
+import matplotlib.pyplot as plt
 
 ################################################################
 # General settings
 ################################################################
+seed=45 #with seed 42, acc=100 after 24 epochs. with seed 50, acc=30 after >40 epochs
+random.seed(seed)
+torch.manual_seed(seed)
+numpy.random.seed(seed)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 pin_memory = device.type == "cuda"
@@ -32,10 +28,10 @@ num_workers = 1 if device.type == "cuda" else 0
 print(f"Using device: {device}")
 
 ################################################################
-# Custom dataset for sine wave classification
+# Custom dataset for sine wave reconstruction
 ################################################################
 
-class SineWaveDataset(Dataset):
+class SummedSineWaveDataset(Dataset):
     def __init__(self, omega_list, amplitude, phase_range, sequence_length, dt, num_samples, noise_std=0.05):
         self.omega_list = omega_list
         self.amplitude = amplitude
@@ -45,50 +41,47 @@ class SineWaveDataset(Dataset):
         self.num_samples = num_samples
         self.noise_std = noise_std
         self.data = []
-        self.labels = []
         self._generate_dataset()
 
     def _generate_dataset(self):
         t = torch.arange(0, self.sequence_length * self.dt, self.dt)
-        for label, omega in enumerate(self.omega_list):
-            for _ in range(self.num_samples // len(self.omega_list)):
+
+        for _ in range(self.num_samples):
+            summed_wave = torch.zeros_like(t)
+            for omega in self.omega_list:
                 phase = random.uniform(*self.phase_range)
                 sine_wave = self.amplitude * torch.sin(omega * t + phase)
-                noise = torch.normal(0, self.noise_std, size=sine_wave.size())
-                noisy_wave = sine_wave + noise
-                self.data.append(noisy_wave.unsqueeze(-1))  # Add feature dimension
-                self.labels.append(label)
+                summed_wave += sine_wave
+            noise = torch.normal(0, self.noise_std, size=summed_wave.size())
+            noisy_wave = summed_wave + noise
+            self.data.append(noisy_wave.unsqueeze(-1))  # Add feature dimension
 
         self.data = torch.stack(self.data)
-        self.labels = torch.tensor(self.labels)
-        #print(self.labels)
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.data)
 
     def __getitem__(self, idx):
-        return self.data[idx], self.labels[idx]
+        return self.data[idx], self.data[idx]  # Input is the same as the target
 
 ################################################################
 # Data preparation
 ################################################################
 
 rand_num = random.randint(1, 10000)
-omega_list = [10.0, 17.0, 25.0]
-#omega_list = [3.0, 17.0, 48.0]
-omega_list_neurons = [10.0, 17.0, 25.0]
-#omega_list_neurons = [5.0, 20.0, 29.0] #using this to check whether it's really sensitive to right frequencies 
-#omega_list_neurons = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 28]
+omega_list = [5, 17, 25]
+omega_list_neurons = [2, 12, 33]
+
 amplitude = 1.0
-phase_range = (0, 2 * math.pi)
-#phase_range = (0, 0)
-sequence_length = 250
+#phase_range = (0, 2 * math.pi)
+phase_range = (0, 0)
+sequence_length = 200
 dt = 0.01
 num_samples = 3000
-noise_std = 1
+noise_std = 0.00
 batch_size = 256
 
-sine_dataset = SineWaveDataset(
+sine_dataset = SummedSineWaveDataset(
     omega_list=omega_list,
     amplitude=amplitude,
     phase_range=phase_range,
@@ -110,46 +103,39 @@ val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, pin_m
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin_memory=pin_memory, num_workers=num_workers)
 
 ################################################################
-# Model setup
+# Reconstruction model setup
 ################################################################
 
 hidden_size = 3
-num_classes = len(omega_list)
 input_size = 1  # Single feature per time step
 
-# Define your SNN model (update this import if necessary)
-
+# Define your SNN model for reconstruction
 model = snn.models.SimpleResRNN(
     input_size=input_size,
     hidden_size=hidden_size,
-    output_size=num_classes,
-    #adaptive_omega_a=15.0,
-    #adaptive_omega_b=85.0,
-    adaptive_omega_a=min(omega_list)- 1.0,
-    adaptive_omega_b=max(omega_list)+1.0,
+    output_size=input_size,  # Output size matches input size for reconstruction
+    adaptive_omega_a=min(omega_list) - 0.5,
+    adaptive_omega_b=max(omega_list) + 0.5,
     adaptive_b_offset_a=0.1,
     adaptive_b_offset_b=1.0,
     out_adaptive_tau_mem_mean=20.0,
     out_adaptive_tau_mem_std=1.0,
-    label_last=False,
+    label_last=False,  # Output the full sequence
     mask_prob=0.0,
-    output_bias=False,
+    output_bias=True,
     initial_omegas=omega_list_neurons
 ).to(device)
 
 model = torch.jit.script(model)
-
-#print(model.out.linear.weight.data)
-#print(model.hidden.omega.detach().cpu().numpy())
 ################################################################
 # Experiment setup with Weights & Biases
 ################################################################
 
 wandb.init(
-    project="sine-wave-debug-exp",
+    project="sine-wave-reconstruction",
     config={
         "learning_rate": 1.0,
-        "epochs": 150,
+        "epochs": 50,
         "batch_size": batch_size,
         "hidden_size": hidden_size,
         "sequence_length": sequence_length,
@@ -157,144 +143,99 @@ wandb.init(
         "num_samples": num_samples,
         "noise_std": noise_std,
         "omega_list": omega_list,
-        "l1_lambda": 0.001, # Regularization term for input weights
-        "use_wandb": True
     },
-    name=f"learn-everything-{datetime.now().strftime('%m-%d_%H-%M-%S')}",
+    name=f"sine-wave-reconstruction-{datetime.now().strftime('%m-%d_%H-%M-%S')}",
 )
 
 config = wandb.config
 
-criterion = nn.CrossEntropyLoss()
+criterion = nn.MSELoss()  # Use mean squared error for reconstruction
 #optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=0.9)
 scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1 - epoch / config.epochs)
 
-
 os.makedirs("models", exist_ok=True)
-
 save_path = f"models/{datetime.now().strftime('%m-%d_%H-%M-%S')}-best-model.pt"
 
 ################################################################
 # Training and evaluation functions
 ################################################################
 
-
 def evaluate(loader):
     model.eval()
-    total_loss, correct = 0, 0
+    total_loss = 0
+    examples = []
+    membranes=[]
 
     with torch.no_grad():
         for inputs, targets in loader:
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs, _, _ = model(inputs.permute(1, 0, 2)) 
-            #print(outputs) # Adjust for [seq_len, batch, input_size]
-            loss = criterion(outputs.mean(dim=0), targets)
-            total_loss += loss.item()
-            correct += (outputs.mean(dim=0).argmax(dim=1) == targets).sum().item()
-            #print(f'---------\n{outputs.mean(dim=0).argmax(dim=1)}')
-            #print(f'{targets}\n---------')
+            outputs, ((hidden_z, hidden_u), out_u), num_spikes  = model(inputs.permute(1, 0, 2))  # Adjust for [seq_len, batch, input_size]
+            
+            #print(targets.shape)
+            #print("inputs shape:", inputs.permute(1, 0, 2).shape)  #[200, 256, 1]
+            #print("hidden_u shape", hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)   #[200, 256, 1]
+            #print(hidden_u[10].shape)
+            #print(hidden_u[10])
+            #print(hidden_u[:,5,:].shape)
 
+            loss = criterion(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), targets)
+            total_loss += loss.item()
+
+            inputs=inputs.permute(1, 0, 2)
+            # Log a few examples
+            for i in range(min(inputs.shape[0], 5 - len(examples))):  # Add up to 5 unique samples total
+                examples.append((inputs[:, i, :].cpu(), hidden_u.sum(dim=2).unsqueeze(-1)[:, i, :].cpu()))
+                membranes.append(hidden_u[:, i, :].cpu())
+                if len(examples) >= 5:
+                    break
+            '''''
+            if len(examples) < 5:  # Log up to 3 examples
+                examples.append((inputs[:,5,:].cpu(), hidden_u.sum(dim=2).unsqueeze(-1)[:,5,:].cpu()))
+                membranes.append(hidden_u[:,5,:].cpu())
+            '''''
     avg_loss = total_loss / len(loader)
-    accuracy = correct / len(loader.dataset)
-    return avg_loss, accuracy
+    return avg_loss, examples, membranes
 
 ################################################################
 # Training loop with wandb logging
 ################################################################
 
-#reg_lambda = config.reg_lambda
 epochs = config.epochs
 best_val_loss = float("inf")
 
 for epoch in range(epochs):
     model.train()
-    total_loss, correct = 0, 0
+    total_loss = 0
 
     for inputs, targets in train_loader:
         inputs, targets = inputs.to(device), targets.to(device)
-        #print(targets)
-        #print(inputs.shape)
         optimizer.zero_grad()
-        outputs, _, _ = model(inputs.permute(1, 0, 2)) 
-
-        #print(outputs.shape)
-        #print(outputs)
-        #print(outputs.mean(dim=(0, 1)))
-
-
-        loss = criterion(outputs.mean(dim=0), targets) 
-        
-        '''''
-        l1_lambda = config.l1_lambda
-        rf_weights = model.hidden.linear.weight
-        l1_reg = torch.norm(rf_weights, p=1)
-
-        loss += l1_lambda * l1_reg
-        '''''
-        # Add regularization: -sum(exp(-omega_i))
-        #reg_term = -torch.sum(torch.exp(-model.hidden.omega))
-        #loss += reg_lambda * reg_term
-
+        outputs, ((hidden_z, hidden_u), out_u), num_spikes  = model(inputs.permute(1, 0, 2))
+        loss = criterion(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), targets)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
-                
-        #print(model.out.linear.weight.data)
-        
+
         total_loss += loss.item()
-        correct += (outputs.mean(dim=0).argmax(dim=1) == targets).sum().item()
 
-
-    #print(model.hidden.linear.weight.shape)
-    #print(model.hidden.linear.weight)
     train_loss = total_loss / len(train_loader)
-    train_accuracy = correct / len(train_loader.dataset)
+    val_loss, val_examples, membranes = evaluate(val_loader)
 
-    val_loss, val_accuracy = evaluate(val_loader)
-
-    num_zero_weights = torch.sum(model.hidden.linear.weight.abs() < 1e-3).item()
-    total_weights = model.hidden.linear.weight.numel()
-    sparsity = num_zero_weights / total_weights
-    #print(f"Epoch {epoch}: RFCell weight sparsity = {sparsity:.2%}")
-
-    # Log metrics to wandb
+    # Log metrics and examples to wandb
     wandb.log({
         "Epoch": epoch + 1,
         "Train Loss": train_loss,
-        "Train Accuracy": train_accuracy,
         "Validation Loss": val_loss,
-        "Validation Accuracy": val_accuracy,
-        "Learning Rate": scheduler.get_last_lr()[0],
     })
-
-    # Log learned omegas at each epoch
-    #learned_omegas = model.neuron_layer.omegas.detach().cpu().numpy()  # Adjust based on your model's omega parameter location
-    learned_omegas = model.hidden.omega.detach().cpu().numpy()
-    #print(learned_omegas.shape)
+    #for example in val_examples:
+        #visualize_reconstruction(example[0], example[1], epoch)
     
-    #wandb.log({"learned_omegas": learned_omegas, "Epoch": epoch + 1})
-    #wandb.log({f"learned_omega_{i}": omega for i, omega in enumerate(learned_omegas)})
-
-
- 
+    learned_omegas = model.hidden.omega.detach().cpu().numpy()
     for i, omega in enumerate(learned_omegas):
         wandb.log({f"Neuron {i} Omega": omega, "Epoch": epoch + 1})
 
-
-
-
-
-    learned_b = model.hidden.b_offset.detach().cpu().numpy()
-    for i, b_offset in enumerate(learned_b):
-        wandb.log({f"Neuron {i} b": b_offset, "Epoch": epoch + 1})
-
-    learned_taus = model.out.tau_mem.detach().cpu().numpy()
-    for i, tau in enumerate(learned_taus):
-        wandb.log({f"Neuron {i} tau": tau, "Epoch": epoch + 1})
-
-    print(f"Epoch {epoch+1}/{epochs} | Train Loss: {train_loss:.4f}, Train Acc: {train_accuracy:.4f}, "
-          f"Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.4f},, LR: {scheduler.get_last_lr()[0]:.6f}")
+    print(f"Epoch {epoch+1}/{epochs} | Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
     if val_loss < best_val_loss:
         best_val_loss = val_loss
@@ -304,5 +245,25 @@ for epoch in range(epochs):
 
 print("Training complete. Best model saved to", save_path)
 
-# Finalize wandb logging
-wandb.finish()
+################################################################
+# Testing on unseen data and visualization
+################################################################
+
+test_loss, test_examples, membranes  = evaluate(test_loader)
+print(f"Test Loss: {test_loss:.4f}")
+
+for i, (inputs, outputs) in enumerate(test_examples):
+    plt.figure(figsize=(12, 6))
+    plt.plot(inputs.numpy(), label="Ground Truth", color="blue", alpha=0.6)
+    plt.plot(outputs.numpy(), label="Reconstruction", color="red", alpha=0.8)
+    membrane = membranes[i]  # shape: [seq_len, num_neurons] (e.g. [200, 3])
+    for j in range(membrane.shape[1]):  # iterate over neurons
+        plt.plot(membrane[:, j].numpy(), label=f"Membrane Neuron {j}", alpha=0.5)
+
+    plt.legend()
+    plt.title(f"Test Example {i+1}")
+    plt.xlabel("Time Steps")
+    plt.ylabel("Amplitude")
+    plt.tight_layout()
+    plt.savefig(f"reconstruction_example_{i+1}.png")
+    plt.close()

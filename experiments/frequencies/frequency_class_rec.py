@@ -76,7 +76,7 @@ class SineWaveDataset(Dataset):
 rand_num = random.randint(1, 10000)
 omega_list = [10.0, 17.0, 25.0]
 #omega_list = [3.0, 17.0, 48.0]
-omega_list_neurons = [10.0, 17.0, 25.0]
+omega_list_neurons = [3.0, 14.0, 33.0]
 #omega_list_neurons = [5.0, 20.0, 29.0] #using this to check whether it's really sensitive to right frequencies 
 #omega_list_neurons = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 28]
 amplitude = 1.0
@@ -165,7 +165,8 @@ wandb.init(
 
 config = wandb.config
 
-criterion = nn.CrossEntropyLoss()
+criterion_1 = nn.CrossEntropyLoss()
+criterion_2 = nn.MSELoss()
 #optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=0.9)
 scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1 - epoch / config.epochs)
@@ -187,9 +188,10 @@ def evaluate(loader):
     with torch.no_grad():
         for inputs, targets in loader:
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs, _, _ = model(inputs.permute(1, 0, 2)) 
+            outputs, ((hidden_z, hidden_u), out_u), num_spikes = model(inputs.permute(1, 0, 2)) 
+
             #print(outputs) # Adjust for [seq_len, batch, input_size]
-            loss = criterion(outputs.mean(dim=0), targets)
+            loss = criterion_1(outputs.mean(dim=0), targets)
             total_loss += loss.item()
             correct += (outputs.mean(dim=0).argmax(dim=1) == targets).sum().item()
             #print(f'---------\n{outputs.mean(dim=0).argmax(dim=1)}')
@@ -216,14 +218,14 @@ for epoch in range(epochs):
         #print(targets)
         #print(inputs.shape)
         optimizer.zero_grad()
-        outputs, _, _ = model(inputs.permute(1, 0, 2)) 
+        outputs, ((hidden_z, hidden_u), out_u), num_spikes = model(inputs.permute(1, 0, 2)) 
 
         #print(outputs.shape)
         #print(outputs)
         #print(outputs.mean(dim=(0, 1)))
 
 
-        loss = criterion(outputs.mean(dim=0), targets) 
+        loss = criterion_1(outputs.mean(dim=0), targets)
         
         '''''
         l1_lambda = config.l1_lambda
@@ -253,9 +255,9 @@ for epoch in range(epochs):
 
     val_loss, val_accuracy = evaluate(val_loader)
 
-    num_zero_weights = torch.sum(model.hidden.linear.weight.abs() < 1e-3).item()
-    total_weights = model.hidden.linear.weight.numel()
-    sparsity = num_zero_weights / total_weights
+    #num_zero_weights = torch.sum(model.hidden.linear.weight.abs() < 1e-3).item()
+    #total_weights = model.hidden.linear.weight.numel()
+    #sparsity = num_zero_weights / total_weights
     #print(f"Epoch {epoch}: RFCell weight sparsity = {sparsity:.2%}")
 
     # Log metrics to wandb
@@ -280,9 +282,6 @@ for epoch in range(epochs):
  
     for i, omega in enumerate(learned_omegas):
         wandb.log({f"Neuron {i} Omega": omega, "Epoch": epoch + 1})
-
-
-
 
 
     learned_b = model.hidden.b_offset.detach().cpu().numpy()
