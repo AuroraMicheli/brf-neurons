@@ -55,7 +55,7 @@ class LICell(torch.nn.Module):
             input_size: int,
             layer_size: int,
             tau_mem: float = DEFAULT_LI_TAU_M,
-            adaptive_tau_mem: bool = True,
+            adaptive_tau_mem: bool = False, #CHANGED HERE
             adaptive_tau_mem_mean: float = DEFAULT_LI_ADAPTIVE_TAU_M_MEAN,
             adaptive_tau_mem_std: float = DEFAULT_LI_ADAPTIVE_TAU_M_STD,
             bias: bool = False,
@@ -73,10 +73,25 @@ class LICell(torch.nn.Module):
             bias=bias
         )
 
-        torch.nn.init.xavier_uniform_(self.linear.weight)
-
+        torch.nn.init.xavier_uniform_(self.linear.weight) #original one
+        
+        ############### changed here init of weights between brf and li neurons
+        '''''
+        with torch.no_grad():
+            self.linear.weight.data.fill_(0.1)  # Fill everything with 0.1
+            min_dim = min(layer_size, input_size)
+            self.linear.weight.data[:min_dim, :min_dim].fill_diagonal_(1.0)  # Set diagonal to 1
+            self.linear.weight.requires_grad = True #True if you want to train the weights, False if you want to freeze them
+            #self.linear.weight.requires_grad = False # Freeze weights!
+            #self.linear.bias.requires_grad = False # Freeze weights!
+       ################
+        '''''
+        #FREEZING WEIGHTS FOR RECONSTRUCTION. ONLY USING LEFT-SIDE OF NETWORK
+        self.linear.weight.requires_grad = False
+ 
         if bias:
             torch.nn.init.constant_(self.linear.bias, 0)
+            #self.linear.bias.requires_grad = False
 
         self.adaptive_tau_mem = adaptive_tau_mem
         self.adaptive_tau_mem_mean = adaptive_tau_mem_mean

@@ -225,7 +225,7 @@ for epoch in range(epochs):
         #print(outputs.mean(dim=(0, 1)))
 
 
-        loss = criterion_1(outputs.mean(dim=0), targets)
+        loss = criterion_1(outputs.mean(dim=0), targets) + loss = criterion_1(outputs.mean(dim=0), targets) + criterion_2(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), inputs)
         
         '''''
         l1_lambda = config.l1_lambda

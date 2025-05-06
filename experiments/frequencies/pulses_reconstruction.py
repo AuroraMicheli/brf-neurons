@@ -82,14 +82,17 @@ class DeltaPulseDataset(Dataset):
 ################################################################
 
 # Data preparation
-omega_list = [8.0, 17.0, 25.0]
-omega_list_neurons = [4.0, 12.0, 29.0]
+omega_list = [ 27.0]
+#omega_lst = [16, 27, 36]
+omega_list_neurons = [27.0]
+#omega_list_neurons = omega_list
 amplitude = 10.0
-phase_range = (0, 0)
+phase_range = (0, 0)  # Full range of phase shifts
 sequence_length = 250
 dt = 0.01
 num_samples = 3000
 noise_std = 0.0
+
 noise_value = 0.0
 batch_size = 256
 
@@ -159,7 +162,7 @@ print(f"Plot saved to {save_path}")
 
 
 # Model setup
-hidden_size = 3
+hidden_size = 1
 num_classes = len(omega_list)
 input_size = 1  # Single feature per time step
 
@@ -171,8 +174,8 @@ model = snn.models.SimpleResRNN(
     adaptive_omega_b=max(omega_list) + 1.0,
     #adaptive_b_offset_a=0.1, #original
     #adaptive_b_offset_b=1.0, #original
-    adaptive_b_offset_a=2.,
-    adaptive_b_offset_b=3.,
+    adaptive_b_offset_a=0., #2
+    adaptive_b_offset_b=0., #3
     out_adaptive_tau_mem_mean=20.0,
     out_adaptive_tau_mem_std=1.0,
     label_last=False,
@@ -203,7 +206,92 @@ wandb.init(
 
 config = wandb.config
 
-criterion = nn.CrossEntropyLoss()
+###################
+#LIST OF LOSS FUNCTIONS TRIED
+###################
+def hamming_loss(y_true, y_pred):
+    #[256,250,1]
+    y_pred_bin = (y_pred > 0).float()
+    mismatches = torch.abs(y_true - y_pred_bin).sum(dim=1)  # shape: [batch_size, 1]
+    return mismatches.mean()
+    #return torch.sum(torch.abs(y_true - y_pred_bin))
+
+def cosine_similarity_loss(y_true, y_pred):
+    #y_pred_bin = (y_pred > 0).float()
+    y_true_flat = y_true.squeeze(-1)
+    y_pred_flat = y_pred.squeeze(-1)
+    cos_sim = nn.functional.cosine_similarity(y_pred_flat, y_true_flat, dim=1)
+    return cos_sim.mean()
+'''''
+def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
+    """
+    inputs: [time_steps, batch_size, 1]
+    hidden_z: [time_steps, batch_size, n_neurons]
+    """
+    # --- Rate matching ---
+    input_spike_count = inputs.sum()
+    output_spike_count = hidden_z.sum()
+    rate_loss = ((input_spike_count / (inputs.numel() + eps)) - (output_spike_count / (hidden_z.numel() + eps))) ** 2
+    #print(rate_loss)
+    # --- Competition (per-sample) ---
+    batch_neuron_spikes = hidden_z.sum(dim=0)  # [batch, neurons]
+    max_vals, _ = batch_neuron_spikes.max(dim=-1, keepdim=True)
+    comp_loss = (batch_neuron_spikes.sum(dim=-1, keepdim=True) - max_vals).mean()
+    #print(comp_loss)
+
+    total_loss = rate_loss + comp_weight * comp_loss
+    return total_loss
+'''''
+def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
+  
+    #inputs [256,250,1]
+    #hidden_z [256,250,3]
+    # --- Rate matching (per-sample) ---
+    input_spike_count = inputs.sum(dim=1).squeeze(-1)  # Sum over time, for each sample (batch_size,1)
+    output_spike_count = hidden_z.sum(dim=(1,2)) # Sum over time, for each sample (batch_size,neurons)
+    #print(input_spike_count.shape) #256
+    #print(output_spike_count.shape) #256
+    
+    num_time_steps = inputs.shape[1]  # Number of time steps (250 in this case)
+    # Compute rate loss for each sample
+    rate_loss = ((input_spike_count / (input_spike_count.numel() + eps)) - 
+                (output_spike_count / (output_spike_count.numel() + eps))) ** 2
+
+    normalized_rate_loss = ((input_spike_count - output_spike_count) ** 2)/(input_spike_count ** 2 + eps)
+    
+    my_loss = torch.abs((input_spike_count - output_spike_count))
+    #print(my_loss.mean())
+
+
+
+    # --- Competition (per-sample) ---
+    total_spikes_per_neuron = hidden_z.sum(dim=1) #[batch, neurons]
+    max_spikes, _ = total_spikes_per_neuron.max(dim=1, keepdim=True) # [batch, 1]
+
+    #print(total_spikes_per_neuron)
+   # Compute the competition loss: penalize if more than one neuron has spikes
+    comp_loss = (total_spikes_per_neuron.sum(dim=1) - max_spikes.squeeze()).mean()
+    #print((total_spikes_per_neuron.sum(dim=1) == max_spikes.squeeze()))
+    # Total loss (rate matching + competition)
+    #print(rate_loss.mean())
+    #print("competition", comp_loss)
+    total_loss = normalized_rate_loss.mean() #+ comp_loss  # Average over the batch
+
+    return my_loss
+
+def shift_invariant_mse(target, pred, max_lag=3):
+    pred = (pred > 0).float()
+    losses = [
+        torch.mean((torch.roll(pred, shifts=lag, dims=-1) - target)**2)
+        for lag in range(-max_lag, max_lag + 1)
+    ]
+    return torch.min(torch.stack(losses))
+
+
+
+criterion_1 = nn.CrossEntropyLoss()
+criterion_2 = nn.MSELoss()
+#criterion_2 = soft_peak_valley_loss
 optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=0.9)
 scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1 - epoch / config.epochs)
 
@@ -211,17 +299,27 @@ scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1 - epoch / config.epoch
 def evaluate(loader):
     model.eval()
     total_loss, correct = 0, 0
+    examples = []
+    membranes=[]
+    spikes=[]
     with torch.no_grad():
         for inputs, targets in loader:
             
-            #print(inputs.shape)
-
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs, _, _ = model(inputs.permute(1, 0, 2)) 
-            loss = criterion(outputs.mean(dim=0), targets)
+            outputs, ((hidden_z, hidden_u), out_u), num_spikes = model(inputs.permute(1, 0, 2)) 
+            loss = criterion_1(outputs.mean(dim=0), targets)
             total_loss += loss.item()
             correct += (outputs.mean(dim=0).argmax(dim=1) == targets).sum().item()
-    return total_loss / len(loader), correct / len(loader.dataset)
+
+            inputs=inputs.permute(1, 0, 2)
+            for i in range(min(inputs.shape[0], 5 - len(examples))):  # Add up to 5 unique samples total
+                examples.append((inputs[:, i, :].cpu(), hidden_u.sum(dim=2).unsqueeze(-1)[:, i, :].cpu()))
+                membranes.append(hidden_u[:, i, :].cpu())
+                spikes.append(hidden_z[:, i, :].cpu())
+                if len(examples) >= 5:
+                    break
+
+    return total_loss / len(loader), correct / len(loader.dataset), examples, membranes, spikes
 
 # Training loop
 epochs = config.epochs
@@ -236,19 +334,50 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         outputs, ((hidden_z, hidden_u), out_u), num_spikes = model(inputs.permute(1, 0, 2))# Permute as expected by the model
         
-        #print(inputs.permute(1, 0, 2).shape)  correct: [sequence_lenbght, batch_size, input_size]
-        #print(inputs.permute(1, 0, 2)[:,0,:])
-        #print(hidden_u.shape) correct [sequence_lenght, batch_size, hidden_size]
-        #print(hidden_z.shape) [batch_size, hidden_size] (it's only the last time step)
-        #print(hidden_u[:,0,:])
-        #print(hidden_z.sum(dim=(0,1)))
-        #print(out_u.mean(dim=0))
-        #print(hidden_u[100,:])
-        #print(outputs.shape)
-       
-        loss = criterion(outputs.mean(dim=0), targets)
-        loss.backward()
-        optimizer.step()
+
+        #loss = criterion_1(outputs.mean(dim=0), targets) + criterion_2(inputs,hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
+        #####RECONSTRUCTION#######
+        reconstructed = hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2)  # [batch, time, input]
+        squared_diff = ((inputs - reconstructed) ** 2)/amplitude
+        masked_loss = (squared_diff*inputs).mean()  # weighted by the input
+
+        #print(inputs.shape) # [256, 250, 1]
+        #print(hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)  # [256, 250, 1]
+        #HAMMING
+        hamming_loss_value = hamming_loss(inputs/amplitude, hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
+        #print(hamming_loss_value)
+        
+        #COSINE SIMILARITY
+        cosine_similarity_loss_value = cosine_similarity_loss(inputs/amplitude, hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
+        #print(cosine_similarity_loss_value )
+
+        #SPIKE RATE-COMPETITION
+        #print(hidden_z.permute(1, 0, 2).shape)
+        total_loss = spike_rate_loss(inputs/amplitude, hidden_z.permute(1, 0, 2))
+        #print(total_loss)
+
+        shift_invariant_mse_value = shift_invariant_mse(inputs/amplitude,hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
+        #print(shift_invariant_mse_value)
+        #print(hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)  [256, 250, 1]
+        #loss = total_loss.mean() #criterion_1(outputs.mean(dim=0), targets) 
+        loss=shift_invariant_mse_value
+        print(loss)
+        #print(loss)
+
+
+
+        #loss.backward()
+        '''''      
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                print(f"{name}: grad norm = {param.grad.norm() if param.grad is not None else 'None'}")
+
+        for name, param in model.named_parameters():
+            if param.grad is not None:
+                print(f"{name}: grad norm = {param.grad.norm().item():.4e}")
+
+        '''''
+        #optimizer.step()
 
         #print(model.out.linear.weight.data)
 
@@ -260,7 +389,7 @@ for epoch in range(epochs):
     train_accuracy = train_correct / len(train_loader.dataset)
     
     # Validation
-    val_loss, val_accuracy = evaluate(val_loader)
+    val_loss, val_accuracy, examples, membranes, spikes = evaluate(val_loader)
     
     # Log metrics to wandb
     wandb.log({
@@ -295,7 +424,66 @@ for epoch in range(epochs):
         # You can save the model state dict here if needed:
         # torch.save(model.state_dict(), 'best_model.pth')
 
-    scheduler.step()
+    #scheduler.step()
+
+for i, (inputs, outputs) in enumerate(examples):
+    plt.figure(figsize=(12, 6))
+    plt.plot((inputs/amplitude).numpy(), label="Ground Truth", color="blue", alpha=0.6)
+    plt.plot(outputs.numpy(), label="Reconstruction", color="red", alpha=0.8)
+    membrane = membranes[i]  # shape: [seq_len, num_neurons] (e.g. [200, 3])
+    for j in range(membrane.shape[1]):  # iterate over neurons
+        plt.plot(membrane[:, j].numpy(), label=f"Membrane Neuron {j}", alpha=0.5)
+
+    plt.legend()
+    plt.title(f"Test Example {i+1}")
+    plt.xlabel("Time Steps")
+    plt.ylabel("Amplitude")
+    plt.tight_layout()
+    plt.savefig(f"pulse_reconstruction_example_{i+1}.png")
+    plt.close()
+
+
+
+threshold = 0  # define your spike threshold
+
+for i, (inputs, outputs) in enumerate(examples[:]):  # create only 3 figures
+    plt.figure(figsize=(10, 4))
+    
+    raster_data = []
+    labels = []
+
+    # Input spikes (normalized and thresholded analog signal)
+    input_signal = inputs[:, 0] / amplitude
+    input_spike_times = (input_signal > 0.0).nonzero(as_tuple=True)[0].numpy()
+    raster_data.append(input_spike_times)
+    labels.append("Input")
+
+    # Output spikes for up to 3 neurons
+    spike_tensor = spikes[i]  # shape [T, n_neurons]
+    num_neurons_to_plot = min(3, spike_tensor.shape[1])
+    for j in range(num_neurons_to_plot):
+        neuron_spike_times = (spike_tensor[:, j] > 0).nonzero(as_tuple=True)[0].numpy()
+        raster_data.append(neuron_spike_times)
+        labels.append(f"Neuron {j}")
+
+    # Plot raster: input at the top (unit 0), neurons below (unit 1, 2, ...)
+    for unit_idx, times in enumerate(raster_data):
+        y_position = len(raster_data) - 1 - unit_idx  # flip vertically so input is at the top
+        plt.scatter(times, [y_position] * len(times), s=10, label=labels[unit_idx], alpha=0.7)
+
+    # Styling
+    yticks = list(range(len(raster_data)))
+    ytick_labels = list(reversed(labels))  # input at top
+    plt.yticks(yticks, ytick_labels)
+    plt.grid("on", linestyle="--", alpha=0.5)
+    plt.xlabel("Time Step")
+    plt.ylabel("Unit")
+    plt.title(f"Raster Plot - Example {i+1}")
+    plt.legend(loc='upper right')
+    plt.tight_layout()
+    plt.savefig(f"raster_plot_example_{i+1}.png")
+    plt.close()
+
 
 print("Training complete.")
 wandb.finish()

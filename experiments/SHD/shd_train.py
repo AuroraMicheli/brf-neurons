@@ -351,7 +351,7 @@ for epoch in range(epochs_num + 1):
 
             # Reshape inputs in [sequence_length, batch_size, data_size].
             input = inputs.permute(1, 0, 2).to(device)
-
+            print(inputs[:,5,0 ])
             # Reshape targets (for MNIST it's a single pattern).
             target = targets.to(device=device)
 
@@ -393,6 +393,7 @@ for epoch in range(epochs_num + 1):
                 (batch_correct / current_batch_size) * 100.0,
                 iteration
             )
+            
 
             print_train_loss += loss_value
             print_total += current_batch_size

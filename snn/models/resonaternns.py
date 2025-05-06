@@ -51,10 +51,10 @@ class SimpleResRNN(torch.nn.Module):
             layer_size=hidden_size,
             bias=hidden_bias,
             mask_prob=mask_prob,
-            adaptive_omega=False, #changed to false: no learning
+            adaptive_omega=True, #changed to false: no learning
             adaptive_omega_a=adaptive_omega_a,
             adaptive_omega_b=adaptive_omega_b,
-            adaptive_b_offset=False, #changed to false: no learning
+            adaptive_b_offset=True, #changed to false: no learning
             adaptive_b_offset_a=adaptive_b_offset_a,
             adaptive_b_offset_b=adaptive_b_offset_b,
             dt=dt,
@@ -70,13 +70,15 @@ class SimpleResRNN(torch.nn.Module):
             adaptive_tau_mem_std=out_adaptive_tau_mem_std,
             bias=output_bias,
         )
-
+    
+    '''''
     def forward(
             self,
             x: torch.Tensor,
     ) -> tuple[torch.Tensor, tuple[tuple[torch.Tensor, torch.Tensor], torch.Tensor], torch.Tensor]:
 
         sequence_length = x.shape[0]
+        #print(sequence_length)
         batch_size = x.shape[1]
 
         outputs = list()
@@ -93,14 +95,13 @@ class SimpleResRNN(torch.nn.Module):
         for t in range(sequence_length):
 
             input_t = x[t]
-
             hidden = hidden_z, hidden_u, hidden_v, hidden_q
 
             hidden_z, hidden_u, hidden_v, hidden_q = self.hidden(
                 torch.cat((input_t, hidden_z), dim=1),  # input_t for non-recurrency
                 hidden
             )
-
+            #print(hidden_u)
             # SOP
             num_spikes += hidden_z.sum()
 
@@ -115,7 +116,62 @@ class SimpleResRNN(torch.nn.Module):
         if self.label_last:
             outputs = outputs[-self.n_last:, :, :]
 
-        return outputs, ((hidden_z, hidden_u), out_u), num_spikes
+        #print(hidden_u)
+        return outputs, ((hidden_z, hidden_u), out_u), num_spikes 
+    '''
+        ########### FORWARD-PASS FOR RECONSTRUCTION & CLASSIFICATION ########### 
+
+    def forward(
+        self,
+        x: torch.Tensor,
+) -> tuple[torch.Tensor, tuple[tuple[torch.Tensor, torch.Tensor], torch.Tensor], torch.Tensor]:
+
+        sequence_length = x.shape[0]
+        batch_size = x.shape[1]
+
+        outputs = []
+        hidden_u_seq = []
+        hidden_z_seq = []  # <--- Collect all hidden_u here
+        num_spikes = torch.tensor(0.).to(x.device)
+
+        hidden_z = torch.zeros((batch_size, self.hidden_size)).to(x.device)
+        hidden_u = torch.zeros_like(hidden_z)
+        hidden_v = torch.zeros_like(hidden_z)
+        hidden_q = torch.zeros_like(hidden_z)
+
+        out_u = torch.zeros((batch_size, self.output_size)).to(x.device)
+
+        for t in range(sequence_length):
+            input_t = x[t]
+            hidden = hidden_z, hidden_u, hidden_v, hidden_q
+
+            #print("hidden_u", hidden_u.shape)
+
+            hidden_z, hidden_u, hidden_v, hidden_q = self.hidden(
+                torch.cat((input_t, hidden_z), dim=1),
+                hidden
+            )
+
+            num_spikes += hidden_z.sum()
+
+            out_u = self.out(hidden_z, out_u)
+
+            hidden_u_seq.append(hidden_u)  # <-- Collect hidden_u at this timestep
+            hidden_z_seq.append(hidden_z)
+
+            if t >= self.sub_seq_length:
+                outputs.append(out_u)
+
+        outputs = torch.stack(outputs)  # shape: [seq_len, batch, output_size]
+        hidden_u_seq = torch.stack(hidden_u_seq)  # shape: [seq_len, batch, hidden_size]
+        hidden_z_seq = torch.stack(hidden_z_seq)  # shape: [seq_len, batch, hidden_size]
+       
+
+        if self.label_last:
+            outputs = outputs[-self.n_last:, :, :]
+            hidden_u_seq = hidden_u_seq[-self.n_last:, :, :]
+
+        return outputs, ((hidden_z_seq, hidden_u_seq), out_u), num_spikes
 
 
 # BASIC RF MODEL IMPLEMENTED
@@ -231,6 +287,10 @@ class SimpleVanillaRFRNN(torch.nn.Module):
             outputs = outputs[-self.n_last:, :, :]
 
         return outputs, ((hidden_z, hidden_u), out_u), num_spikes
+
+
+
+
 
 
 class SimpleResRNNTbptt(torch.nn.Module):

@@ -15,7 +15,8 @@ class LinearMask(torch.nn.Linear):
 
         # weight dim = (out_features, in_features) = (hidden_size, input_size + hidden_size)
         # RF init Xavier uniform
-        torch.nn.init.xavier_uniform_(self.weight)
+        #torch.nn.init.xavier_uniform_(self.weight)
+        torch.nn.init.constant_(self.weight, 1) #changed this to have only constant weights =1 
 
         if bias:
             torch.nn.init.constant_(self.bias, 0)

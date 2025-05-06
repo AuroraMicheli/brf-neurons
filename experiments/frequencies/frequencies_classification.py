@@ -218,7 +218,6 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         outputs, _, _ = model(inputs.permute(1, 0, 2)) 
 
-        #print(outputs.shape)
         #print(outputs)
         #print(outputs.mean(dim=(0, 1)))
 
