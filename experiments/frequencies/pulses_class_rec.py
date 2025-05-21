@@ -82,19 +82,18 @@ class DeltaPulseDataset(Dataset):
 ################################################################
 
 # Data preparation
-#omega_list = [ 37.0]
+#omega_list = [ 17, 35.0, 49]
 #omega_lst = [16, 27, 36]
-#omega_list_neurons = [42.0]
+#omega_list_neurons = [ 14, 38.0, 45]
 
-
-omega_list = [ 19, 26.0, 38]
+omega_list = [ 19.0, 26.0, 38]
 #omega_lst = [16, 27, 36]
 omega_list_neurons =  [17.0, 31.0, 42]
-#omega_list_neurons = [ 14, 25.0, 34]
+
 
 #omega_list_neurons = omega_list
-amplitude = 9.0
-phase_range = (0, 0)  # Full range of phase shifts
+amplitude = 10.0
+phase_range = (0, 2*math.pi)  # Full range of phase shifts
 sequence_length = 250
 dt = 0.01
 num_samples = 3000
@@ -159,7 +158,7 @@ plt.title("Raster Plot of Delta Pulse Samples")
 plt.legend()
 
 # Save plot
-save_path = os.path.join(os.getcwd(), "raster_plot.png")
+save_path = os.path.join(os.getcwd(), "raster_plot_multi.png")
 plt.savefig(save_path, dpi=300)
 plt.show()
 
@@ -181,8 +180,8 @@ model = snn.models.SimpleResRNN(
     adaptive_omega_b=max(omega_list) + 1.0,
     #adaptive_b_offset_a=0.1, #original
     #adaptive_b_offset_b=1.0, #original
-    adaptive_b_offset_a=0., #2
-    adaptive_b_offset_b=0, #3
+    adaptive_b_offset_a=2., #2
+    adaptive_b_offset_b=3., #3
     out_adaptive_tau_mem_mean=20.0,
     out_adaptive_tau_mem_std=1.0,
     label_last=False,
@@ -199,7 +198,7 @@ wandb.init(
     project="pulses-classification",
     config={
         "learning_rate": 1.0,
-        "epochs": 15,
+        "epochs": 20,
         "batch_size": batch_size,
         "hidden_size": hidden_size,
         "sequence_length": sequence_length,
@@ -216,19 +215,6 @@ config = wandb.config
 ###################
 #LIST OF LOSS FUNCTIONS TRIED
 ###################
-def hamming_loss(y_true, y_pred):
-    #[256,250,1]
-    y_pred_bin = (y_pred > 0).float()
-    mismatches = torch.abs(y_true - y_pred_bin).sum(dim=1)  # shape: [batch_size, 1]
-    return mismatches.mean()
-    #return torch.sum(torch.abs(y_true - y_pred_bin))
-
-def cosine_similarity_loss(y_true, y_pred):
-    #y_pred_bin = (y_pred > 0).float()
-    y_true_flat = y_true.squeeze(-1)
-    y_pred_flat = y_pred.squeeze(-1)
-    cos_sim = nn.functional.cosine_similarity(y_pred_flat, y_true_flat, dim=1)
-    return cos_sim.mean()
 
 def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
   
@@ -239,17 +225,11 @@ def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
     output_spike_count = hidden_z.sum(dim=(1,2)) # Sum over time, for each sample (batch_size,neurons)
     #print(input_spike_count) #256
     #print(output_spike_count) #256
-    
-    num_time_steps = inputs.shape[1]  # Number of time steps (250 in this case)
-    # Compute rate loss for each sample
-    #rate_loss = ((input_spike_count / (input_spike_count.numel() + eps)) - 
-                #(output_spike_count / (output_spike_count.numel() + eps))) ** 2
 
-    #normalized_rate_loss = ((input_spike_count - output_spike_count) ** 2)/(input_spike_count ** 2 + eps)
     normalized_rate_loss = ((input_spike_count - output_spike_count) / (input_spike_count + eps)) ** 2
-    #print(normalized_rate_loss.mean())
-    #my_loss = torch.abs((input_spike_count - output_spike_count))
-    #print(my_loss.mean())
+
+
+
 
     # --- Competition (per-sample) ---
     total_spikes_per_neuron = hidden_z.sum(dim=1) #[batch, neurons]
@@ -267,14 +247,6 @@ def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
     #return my_loss.mean()
     return total_loss
 
-def shift_invariant_mse(target, pred, max_lag=3):
-    pred = (pred > 0).float()
-    losses = [
-        torch.mean((torch.roll(pred, shifts=lag, dims=-1) - target)**2)
-        for lag in range(-max_lag, max_lag + 1)
-    ]
-    return torch.min(torch.stack(losses))
-
 def gaussian_kernel(size: int, std: float):
     """Generates a 1D Gaussian kernel."""
     t = torch.arange(-(size // 2), size // 2 + 1, dtype=torch.float32)
@@ -291,7 +263,6 @@ def spike_kernel_mse(inputs, hidden_z, kernel_size=21, std=1.0):
     # --- Rate matching (per-sample) ---
     input_spike_count = inputs.squeeze(-1)  #  for each sample (batch_size,time steps)
     output_spike_count = hidden_z.sum(dim=2) # Sum over time, for each sample (batch_size,time steps)
-    #print(output_spike_count.sum(dim=1))
     #print(input_spike_count.shape) #[256,250]
     #print(output_spike_count.shape) #[256,250]
 
@@ -300,9 +271,7 @@ def spike_kernel_mse(inputs, hidden_z, kernel_size=21, std=1.0):
 
     # Reshape to [batch, channel=1, time] for conv1d
     inputs = input_spike_count.unsqueeze(1)     # [batch, 1, time]
-    #print(inputs.sum())
     hidden_z =  output_spike_count.unsqueeze(1) # [batch, 1, time]
-    #print(hidden_z.sum())
         # Apply 1D convolution (padding to keep size)
     padding = kernel_size // 2
     smooth_input = nn.functional.conv1d(inputs, kernel, padding=padding)
@@ -319,12 +288,11 @@ def spike_kernel_mse(inputs, hidden_z, kernel_size=21, std=1.0):
 def membrane_kernel_mse(inputs, hidden_u, kernel_size=21, std=1.0):
   
     #inputs [256,250,1]
-    #hidden_zu[256,250,3]
+    #hidden_z [256,250,3]
 
     # --- Rate matching (per-sample) ---
     input_spike_count = inputs.squeeze(-1)  #  for each sample (batch_size,time steps)
-    output_membrane = hidden_u.sum(dim=2) # Sum over neurons, for each sample (batch_size,time steps)
-    #print(output_spike_count.sum(dim=1))
+    output_membrane = hidden_u.sum(dim=2) # Sum over time, for each sample (batch_size,time steps)
     #print(input_spike_count.shape) #[256,250]
     #print(output_spike_count.shape) #[256,250]
 
@@ -333,9 +301,7 @@ def membrane_kernel_mse(inputs, hidden_u, kernel_size=21, std=1.0):
 
     # Reshape to [batch, channel=1, time] for conv1d
     inputs = input_spike_count.unsqueeze(1)     # [batch, 1, time]
-    #print(inputs.sum())
     hidden_u =  output_membrane.unsqueeze(1) # [batch, 1, time]
-    #print(hidden_z.sum())
         # Apply 1D convolution (padding to keep size)
     padding = kernel_size // 2
     smooth_input = nn.functional.conv1d(inputs, kernel, padding=padding)
@@ -348,7 +314,6 @@ def membrane_kernel_mse(inputs, hidden_u, kernel_size=21, std=1.0):
     #loss = nn.functional.mse_loss(smooth_output, smooth_input)
 
     return loss
-
 
 def spike_kernel_mse_competitive_masked(inputs, hidden_z, kernel_size=21, std=1.0, eps=1e-8):
     """
@@ -469,10 +434,7 @@ def membrane_kernel_mse_competitive(inputs, hidden_u, kernel_size=21, std=1.0, e
     return total_loss
 
 
-
-
 criterion_1 = nn.CrossEntropyLoss()
-criterion_2 = nn.MSELoss()
 #criterion_2 = soft_peak_valley_loss
 #optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=0.9)
 
@@ -519,6 +481,8 @@ def evaluate(loader):
 epochs = config.epochs
 best_val_loss = float('inf')  # Initialize best validation loss for model checkpointing
 
+omega_tracking = [model.hidden.omega.detach().cpu().numpy().copy()]
+
 for epoch in range(epochs):
     model.train()
     train_loss, train_correct = 0, 0
@@ -530,51 +494,26 @@ for epoch in range(epochs):
         
 
         #loss = criterion_1(outputs.mean(dim=0), targets) + criterion_2(inputs,hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
-        #####RECONSTRUCTION#######
-        reconstructed = hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2)  # [batch, time, input]
-        squared_diff = ((inputs - reconstructed) ** 2)/amplitude
-        masked_loss = (squared_diff*inputs).mean()  # weighted by the input
-
-        #print(inputs.shape) # [256, 250, 1]
-        #print(hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)  # [256, 250, 1]
-        #HAMMING
-        hamming_loss_value = hamming_loss(inputs/amplitude, hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
-        #print(hamming_loss_value)
-        
-        #COSINE SIMILARITY
-        cosine_similarity_loss_value = cosine_similarity_loss(inputs/amplitude, hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
-        #print(cosine_similarity_loss_value )
 
         #SPIKE RATE-COMPETITION
         #print(hidden_z.permute(1, 0, 2).shape)
-        total_loss = spike_rate_loss(inputs/amplitude, hidden_z.permute(1, 0, 2))
-        #print(total_loss)
+        spike_loss = spike_rate_loss(inputs/amplitude, hidden_z.permute(1, 0, 2))
 
-        shift_invariant_mse_value = shift_invariant_mse(inputs/amplitude,hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2))
-        #print(shift_invariant_mse_value)
-        #print(hidden_z.sum(dim=2).unsqueeze(-1).permute(1, 0, 2).shape)  [256, 250, 1]
-        #loss = total_loss.mean() #criterion_1(outputs.mean(dim=0), targets) 
-        
-        #print(hidden_z.permute(1, 0, 2).shape)
-        #print(hidden_u.permute(1, 0, 2).shape)
 
         smooth_kernel_loss = spike_kernel_mse(inputs/amplitude,  hidden_z.permute(1, 0, 2))
         compt_smooth_kernel_loss = spike_kernel_mse_competitive_masked(inputs/amplitude, hidden_u.permute(1, 0, 2) )
 
         membrane_kernel_mse_value = membrane_kernel_mse(inputs/amplitude, hidden_u.permute(1, 0, 2) )
         comp_membrane_kernel_mse_value = membrane_kernel_mse_competitive(inputs/amplitude, hidden_u.permute(1, 0, 2) )
-        
+
         #loss=smooth_kernel_loss + total_loss
         #print("kernel spikes:", smooth_kernel_loss)
         #print("kernel potentials:", membrane_kernel_mse_value)
-        #print("spike count:", total_loss)
-        #print("comp-kernel potentials:", comp_membrane_kernel_mse_value)
-        #print("compt-kernel spikes", compt_smooth_kernel_loss)
-
-        #loss = membrane_kernel_mse_value + 0.1*total_loss #+ smooth_kernel_loss
-        loss = comp_membrane_kernel_mse_value + compt_smooth_kernel_loss 
-        #loss = comp_membrane_kernel_mse_value
-        #print(loss)
+        #print("spike count:", spike_loss)
+        print("class:", criterion_1(outputs.mean(dim=0), targets))
+        print("reconstr:",comp_membrane_kernel_mse_value )
+        loss = criterion_1(outputs.mean(dim=0), targets) + comp_membrane_kernel_mse_value #+ membrane_kernel_mse_value + 0.1*spike_loss #+ smooth_kernel_loss
+        print(loss)
         #print(loss)
 
 
@@ -614,6 +553,10 @@ for epoch in range(epochs):
         "Learning Rate": scheduler.get_last_lr()[0],
     })
 
+    current_omegas = model.hidden.omega.detach().cpu().numpy().copy()
+    omega_tracking.append(current_omegas)
+
+
     # Log learned omegas, b_offsets, and tau_mem
     learned_omegas = model.hidden.omega.detach().cpu().numpy()
     for i, omega in enumerate(learned_omegas):
@@ -652,7 +595,7 @@ for i, (inputs, outputs) in enumerate(examples):
     plt.xlabel("Time Steps")
     plt.ylabel("Amplitude")
     plt.tight_layout()
-    plt.savefig(f"pulse_reconstruction_example_{i+1}.png")
+    plt.savefig(f"multi-pulse_reconstruction_example_{i+1}.png")
     plt.close()
 
 
@@ -694,12 +637,32 @@ for i, (inputs, outputs) in enumerate(examples[:]):  # create only 3 figures
     plt.title(f"Raster Plot - Example {i+1}")
     plt.legend(loc='upper right')
     plt.tight_layout()
-    plt.savefig(f"raster_plot_example_{i+1}.png")
+    plt.savefig(f"multi-raster_plot_example_{i+1}.png")
     plt.close()
 
 
-####################VISUALIZE KERNELS################################
+omega_tracking = numpy.array(omega_tracking)
+
+# Plotting
+plt.figure(figsize=(8, 5))
+for i in range(omega_tracking.shape[1]):
+    plt.plot(omega_tracking[:, i], label=f'Neuron {i}')
+
+plt.xlabel('Epoch')
+plt.ylabel('Omega Value')
+plt.title('Omega Evolution During Training')
+plt.legend()
+plt.grid(True)
+
+# Save the plot
+omega_plot_path = os.path.join(os.getcwd(), "omega_pulses_evolution_right.png")
+plt.savefig(omega_plot_path, dpi=300)
+plt.show()
 '''
+
+
+####################VISUALIZE KERNELS################################
+
 def convolve_spikes_with_kernel(spikes, kernel):
     """Convolves spike trains with a kernel along the time dimension."""
     # spikes: [T, N] → [1, N, T]
@@ -755,5 +718,6 @@ save_path = os.path.join(os.getcwd(), "kernel.png")
 plt.savefig(save_path, dpi=300)
 plt.close()
 '''
+
 print("Training complete.")
 wandb.finish()

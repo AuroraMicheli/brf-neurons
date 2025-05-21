@@ -8,6 +8,7 @@ import random
 import sys
 import numpy
 import matplotlib
+import matplotlib.pyplot as plt
 #print(matplotlib.__version__)
 import wandb
 import os
@@ -76,16 +77,16 @@ class SineWaveDataset(Dataset):
 rand_num = random.randint(1, 10000)
 omega_list = [10.0, 17.0, 25.0]
 #omega_list = [3.0, 17.0, 48.0]
-omega_list_neurons = [3.0, 14.0, 33.0]
+omega_list_neurons = [8.0, 15.0, 28.0]
 #omega_list_neurons = [5.0, 20.0, 29.0] #using this to check whether it's really sensitive to right frequencies 
 #omega_list_neurons = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 28]
 amplitude = 1.0
-phase_range = (0, 2 * math.pi)
+phase_range = (0, 0)
 #phase_range = (0, 0)
 sequence_length = 250
 dt = 0.01
 num_samples = 3000
-noise_std = 1
+noise_std = 0
 batch_size = 256
 
 sine_dataset = SineWaveDataset(
@@ -97,6 +98,42 @@ sine_dataset = SineWaveDataset(
     num_samples=num_samples,
     noise_std=noise_std
 )
+
+# Set up time axis
+t = torch.arange(0, sequence_length * dt, dt)
+
+# Find one sample from each class
+samples = []
+labels = sine_dataset.labels
+data = sine_dataset.data
+
+for class_idx in range(len(omega_list)):
+    for i in range(len(labels)):
+        if labels[i] == class_idx:
+            samples.append(data[i].squeeze().numpy())
+            break
+
+# Plotting
+plt.figure(figsize=(10, 6))
+offset = 2.5  # Vertical offset between waveforms
+
+for i, sample in enumerate(samples):
+    shifted_sample = sample + i * offset  # Shift each waveform vertically
+    plt.plot(t, shifted_sample, label=f'Class {i} (ω={omega_list[i]})')
+
+# Format y-axis to show only class indices at the right locations
+yticks = [i * offset for i in range(len(samples))]
+ytick_labels = [f'Class {i}' for i in range(len(samples))]
+plt.yticks(yticks, ytick_labels)
+
+plt.xlabel('Time (s)')
+plt.title('Sample Sine Waves from Each Class')
+plt.grid(True)
+plt.tight_layout()
+
+# Save the plot
+plt.savefig('sine_wave_samples.png', dpi=300)
+plt.show()
 
 # Split into train, validation, and test sets (70/15/15 split)
 train_size = int(0.7 * len(sine_dataset))
@@ -209,6 +246,8 @@ def evaluate(loader):
 epochs = config.epochs
 best_val_loss = float("inf")
 
+omega_tracking = [model.hidden.omega.detach().cpu().numpy().copy()]
+
 for epoch in range(epochs):
     model.train()
     total_loss, correct = 0, 0
@@ -225,7 +264,7 @@ for epoch in range(epochs):
         #print(outputs.mean(dim=(0, 1)))
 
 
-        loss = criterion_1(outputs.mean(dim=0), targets) + loss = criterion_1(outputs.mean(dim=0), targets) + criterion_2(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), inputs)
+        loss = criterion_1(outputs.mean(dim=0), targets) #+ criterion_2(hidden_u.sum(dim=2).unsqueeze(-1).permute(1, 0, 2), inputs)
         
         '''''
         l1_lambda = config.l1_lambda
@@ -270,6 +309,9 @@ for epoch in range(epochs):
         "Learning Rate": scheduler.get_last_lr()[0],
     })
 
+    current_omegas = model.hidden.omega.detach().cpu().numpy().copy()
+    omega_tracking.append(current_omegas)
+
     # Log learned omegas at each epoch
     #learned_omegas = model.neuron_layer.omegas.detach().cpu().numpy()  # Adjust based on your model's omega parameter location
     learned_omegas = model.hidden.omega.detach().cpu().numpy()
@@ -302,6 +344,27 @@ for epoch in range(epochs):
     scheduler.step()
 
 print("Training complete. Best model saved to", save_path)
+
+
+
+
+omega_tracking = numpy.array(omega_tracking)
+
+# Plotting
+plt.figure(figsize=(8, 5))
+for i in range(omega_tracking.shape[1]):
+    plt.plot(omega_tracking[:, i], label=f'Neuron {i}')
+
+plt.xlabel('Epoch')
+plt.ylabel('Omega Value')
+plt.title('Omega Evolution During Training')
+plt.legend()
+plt.grid(True)
+
+# Save the plot
+omega_plot_path = os.path.join(os.getcwd(), "omega_waves_evol_wrong.png")
+plt.savefig(omega_plot_path, dpi=300)
+plt.show()
 
 # Finalize wandb logging
 wandb.finish()
