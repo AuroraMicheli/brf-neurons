@@ -307,6 +307,7 @@ for epoch in range(epochs_num + 1):
                 input_size_=input_size,
                 permuted_idx_=permuted_idx
             )
+            
 
             # Reshape targets (for MNIST it's a single pattern).
             target = targets.to(device=device)

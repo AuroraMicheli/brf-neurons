@@ -65,7 +65,7 @@ class SimpleResRNN(torch.nn.Module):
         self.out = modules.LICell(
             input_size=hidden_size,
             layer_size=output_size,
-            adaptive_tau_mem=False, #changed to false: no learning
+            adaptive_tau_mem=True, #changed to false: no learning
             adaptive_tau_mem_mean=out_adaptive_tau_mem_mean,
             adaptive_tau_mem_std=out_adaptive_tau_mem_std,
             bias=output_bias,

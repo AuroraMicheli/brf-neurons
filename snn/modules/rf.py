@@ -36,8 +36,8 @@ DEFAULT_DT = 0.01
 FACTOR = 1 / (DEFAULT_DT * 2)
 
 #DEFAULT_GAMMA = 0.9 #default
-#DEFAULT_GAMMA = 0.1
 DEFAULT_GAMMA = 0.8
+#DEFAULT_GAMMA = 0.8 #For the continous sine waves this is the best one
 
 
 def rf_update(
@@ -314,7 +314,7 @@ class BRFCell(RFCell):
 
         #print(b.shape)
 
-        z, u, v, q = brf_I_update( #II for better stability 
+        z, u, v, q = brf_II_update( #II for better stability 
             x=in_sum,
             z_=z,
             u_=u,

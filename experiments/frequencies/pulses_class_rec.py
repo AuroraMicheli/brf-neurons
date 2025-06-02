@@ -81,11 +81,6 @@ class DeltaPulseDataset(Dataset):
 # Data preparation
 ################################################################
 
-# Data preparation
-#omega_list = [ 17, 35.0, 49]
-#omega_lst = [16, 27, 36]
-#omega_list_neurons = [ 14, 38.0, 45]
-
 omega_list = [ 19.0, 26.0, 38]
 #omega_lst = [16, 27, 36]
 omega_list_neurons =  [17.0, 31.0, 42]
@@ -165,8 +160,6 @@ plt.show()
 print(f"Plot saved to {save_path}")
 
 ##########################################
-
-
 # Model setup
 hidden_size = 3
 num_classes = len(omega_list)
@@ -238,10 +231,7 @@ def spike_rate_loss(inputs, hidden_z, comp_weight=0.1, eps=1e-8):
     #print(total_spikes_per_neuron)
    # Compute the competition loss: penalize if more than one neuron has spikes
     comp_loss = (total_spikes_per_neuron.sum(dim=1) - max_spikes.squeeze()).mean()
-    #print((total_spikes_per_neuron.sum(dim=1) == max_spikes.squeeze()))
-    # Total loss (rate matching + competition)
-    #print(rate_loss.mean())
-    #print("competition", comp_loss)
+
     total_loss = normalized_rate_loss.mean() #+ comp_loss  # Average over the batch
 
     #return my_loss.mean()

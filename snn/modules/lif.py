@@ -87,7 +87,7 @@ class LICell(torch.nn.Module):
        ################
         '''''
         #FREEZING WEIGHTS FOR RECONSTRUCTION. ONLY USING LEFT-SIDE OF NETWORK
-        self.linear.weight.requires_grad = False
+        self.linear.weight.requires_grad = True
  
         if bias:
             torch.nn.init.constant_(self.linear.bias, 0)
